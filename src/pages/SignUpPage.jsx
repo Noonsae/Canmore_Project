@@ -11,10 +11,10 @@ const SignUpPage = () => {
     const { userName, userId, password, checkPassword } = formData;
 
     const handleChange = (e) => {
-        const { userName, value } = e.target;
+        const { name, value } = e.target;
         setFormData({
             ...formData,
-            [userName]: value,
+            [name]: value,
         });
     };
 
@@ -42,7 +42,7 @@ const SignUpPage = () => {
                 <div className="input-group">
                     <label htmlFor="userId">아이디</label>
                     <input
-                        type="userId"
+                        type="text"
                         id="userId"
                         name="userId"
                         // value={userId}
@@ -62,7 +62,7 @@ const SignUpPage = () => {
                     />
                 </div>
                 <div className="input-group">
-                    <label htmlFor="checkPassword">비밀번호</label>
+                    <label htmlFor="checkPassword">비밀번호확인</label>
                     <input
                         type="password"
                         id="checkPassword"
