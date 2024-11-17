@@ -1918,11 +1918,6 @@ react-refresh@^0.14.2:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.14.2.tgz#3833da01ce32da470f1f936b9d477da5c7028bf9"
   integrity sha512-jCvmsr+1IUSMUyzOkRcvnVbX3ZYC6g9TDrDbFuFmRDq7PD4yaGbLKNQL6k2jnArV8hjYxh7hVhAZB6s9HDGpZA==
 
-react-reset@^0.0.0:
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/react-reset/-/react-reset-0.0.0.tgz#f5c029b23e05c4230c80f909de8077dcf864794e"
-  integrity sha512-ux3APgCCWMExn/KwA/VZy1vse9g8xbqpoJt6EDHysweQjZJPi8xYjWJ8z0nRH4JvM0aKwTZ6boUz5I/OkRywxg==
-
 react-router-dom@^6.28.0:
   version "6.28.0"
   resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.28.0.tgz#f73ebb3490e59ac9f299377062ad1d10a9f579e6"
