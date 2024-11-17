@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 
 const SignUpPage = () => {
+
     const [formData, setFormData] = useState({
         userName: '',
         userId: '',        
@@ -20,7 +21,7 @@ const SignUpPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // 여기서 회원가입 로직을 처리합니다.
+        // 회원가입 로직 처리
         console.log('회원가입 데이터:', formData);
     };
 
@@ -35,6 +36,7 @@ const SignUpPage = () => {
                         id="userName"
                         name="userName"
                         // value={userName}
+                        placeholder="사용하실 이름을 다시 입력해주세요."
                         onChange={handleChange}
                         required
                     />
@@ -46,6 +48,7 @@ const SignUpPage = () => {
                         id="userId"
                         name="userId"
                         // value={userId}
+                        placeholder="아이디를 다시 입력해주세요."
                         onChange={handleChange}
                         required
                     />
@@ -57,6 +60,7 @@ const SignUpPage = () => {
                         id="password"
                         name="password"
                         // value={password}
+                        placeholder="비밀번호를 입력해주세요."
                         onChange={handleChange}
                         required
                     />
@@ -68,6 +72,7 @@ const SignUpPage = () => {
                         id="checkPassword"
                         name="checkPassword"
                         // value={checkPassword}
+                        placeholder="비밀번호를 다시 입력해주세요."
                         onChange={handleChange}
                         required
                     />
