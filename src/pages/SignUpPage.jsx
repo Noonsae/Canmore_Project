@@ -2,14 +2,14 @@
 
 const SignUpPage = () => {
 
-    const [formData, setFormData] = useState({
-        userName: '',
-        userId: '',        
-        password: '',
-        checkPassword: '',
-    });
+    // const [formData, setFormData] = useState({
+    //     userName: '',
+    //     userId: '',        
+    //     password: '',
+    //     checkPassword: '',
+    // });
 
-    const { userName, userId, password, checkPassword } = formData;
+    // const { userName, userId, password, checkPassword } = formData;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -27,10 +27,11 @@ const SignUpPage = () => {
 
     return (
         <div className="signUp-container">
-            <h2>회원가입 페이지</h2>
+            <h1>아 몰랑 언젠간 이름이 생길거야 ㅇㅅㅇ</h1>
+            <p>빠르고 쉽게 가입할 수 있습니다.</p>
             <form onSubmit={handleSubmit}>
                 <div className="input-group">
-                    <label htmlFor="userName">닉네임</label>
+                    <label htmlFor="userName">이름</label>
                     <input
                         type="text"
                         id="userName"
@@ -66,18 +67,17 @@ const SignUpPage = () => {
                     />
                 </div>
                 <div className="input-group">
-                    <label htmlFor="checkPassword">비밀번호확인</label>
+                    <label htmlFor="checkPassword">비밀번호 확인</label>
                     <input
                         type="password"
                         id="checkPassword"
                         name="checkPassword"
-                        // value={checkPassword}
-                        placeholder="비밀번호를 다시 입력해주세요."
+                        // value={checkPassword}              
                         onChange={handleChange}
                         required
                     />
                 </div>
-                <button type="submit">회원가입</button>
+                <button type="submit">가입 요청</button>
             </form>
         </div>
     );
