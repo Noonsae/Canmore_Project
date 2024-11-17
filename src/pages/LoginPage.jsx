@@ -4,7 +4,7 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
   const goToSignUp = () => {
-    navigate("SingUp");
+    navigate("/sign-up");
   }
   
   const goToHome = () => {
