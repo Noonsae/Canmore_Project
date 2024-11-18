@@ -1,22 +1,19 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-
-import LoginPage from "../pages/LoginPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignUpPage from "../pages/SignUpPage";
-import Home from "../pages/Home";
+import LoginPage from "../pages/LoginPage";
+import FeedPage from "../pages/FeedPage";
+import TimeLine from "../pages/TimeLine";
 
-
-const Router = () => {
-
-  return (
-    <BrowserRouter>
-      <Routes>
-        {/* Routs */}
-        <Route path="/" element={<LoginPage/>}/>
-        <Route path="/sign-up" element={<SignUpPage/>}/>
-        <Route path="/Home" element={<Home/>}/>
-      </Routes>
-    </BrowserRouter>
-  );
-};
+const Router = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<FeedPage />} />
+      <Route path="/sign-up" element={<SignUpPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/timeline" element={<TimeLine/>}/>
+    </Routes>
+  </BrowserRouter>
+);
 
 export default Router;
+
