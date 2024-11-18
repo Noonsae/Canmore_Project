@@ -5,9 +5,13 @@ import { createContext } from "react";
 const MyContext = createContext();
 
 const Provider = ({ children }) => {
+
+  const [userName, setUseName] = useState([]);
+  
+    
+
   
   const MyContext = createContext();
-  const [userName, setUseName] = useState([]);
 
   return <MyContext.Provider value={{}}>{children}</MyContext.Provider>;
 };
