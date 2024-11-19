@@ -12,7 +12,6 @@ const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Routs */}
         <Route path="/" element={<LoginPage/>}/>
         <Route path="/sign-up" element={<SignUpPage/>}/>
         <Route path="/Home" element={<Layout><HomePage/></Layout>}/>
