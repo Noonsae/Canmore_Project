@@ -5,13 +5,14 @@ import { FeedProvider } from "./context/FeedContext";
 
 const App = () => {
   return (
-<Provider>
-  <FeedProvider>
-    <GlobalStyle />
-    <Router />
-  </FeedProvider>
-</Provider>
+    <FeedProvider>      
+    <Provider>
+        <GlobalStyle />
+        <Router />
+    </Provider>
+    </FeedProvider>
   );
 };
 
 export default App;
+
