@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import ProfileBox from '../components/ProfileBox';
-import FollowerBox from '../components/FollowerBox';
-import FeedBox from '../components/FeedBox';
-import { PageContainer, LeftSection, RightSection } from '../styles/StHome';
+import { useState } from "react";
+import { useFeed } from "../context/FeedContext";
+import styled from "styled-components";
+import ProfileBox from "../components/ProfileBox";
+import FollowerBox from "../components/FollowerBox";
+import FeedBox from "../components/FeedBox";
+import CommentModal from "../components/CommentModal";
+import { PageContainer, LeftSection, RightSection } from "../styles/StHome";
 
-// 명예의 전당 스타일
 const HallOfFameBox = styled.div`
   background-color: #fff5d5;
   margin-top: 20px;
@@ -38,45 +39,27 @@ const HallOfFameText = styled.span`
 `;
 
 function Home() {
+  const { feeds, toggleLike } = useFeed(); // 수정: toggleLike 추가
   const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedFeed, setSelectedFeed] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 임시 데이터
-  const feeds = [
-    {
-      id: 1,
-      name: '피카츄',
-      image: 'https://via.placeholder.com/150',
-      likes: 10,
-      comments: 5
-    },
-    {
-      id: 2,
-      name: '꼬부기',
-      image: 'https://via.placeholder.com/150',
-      likes: 8,
-      comments: 3
-    },
-    {
-      id: 3,
-      name: '파이리',
-      image: 'https://via.placeholder.com/150',
-      likes: 12,
-      comments: 7
-    },
-    {
-      id: 4,
-      name: '버터플',
-      image: 'https://via.placeholder.com/150',
-      likes: 9,
-      comments: 4
-    }
-  ];
+  // 명예의 전당 데이터: 좋아요 수로 정렬
+  const hallOfFame = feeds
+    .filter((feed) => feed.likes && Array.isArray(feed.likes)) // 수정: likes 배열 확인
+    .sort((a, b) => b.likes.length - a.likes.length)
+    .slice(0, 3);
 
-  // 명예의 전당 데이터 좋아요 수로 정렬!!!
-  const hallOfFame = [...feeds].sort((a, b) => b.likes - a.likes).slice(0, 3);
+  // 명예의 전당에서 선택된 사용자의 뉴스피드 필터링
+  const filteredFeeds = selectedUser
+    ? feeds.filter((feed) => feed.userName === selectedUser)
+    : feeds;
 
-  // 선택된 유저 게시물 필터링->어떻게 해야하나!
-  const filteredFeeds = selectedUser ? feeds.filter((feed) => feed.name === selectedUser) : feeds;
+  // 댓글 버튼 클릭 핸들러
+  const handleCommentClick = (feed) => {
+    setSelectedFeed(feed);
+    setIsModalOpen(true);
+  };
 
   return (
     <PageContainer>
@@ -85,19 +68,36 @@ function Home() {
         <FollowerBox />
         <HallOfFameBox>
           <HallOfFameTitle>명예의 전당</HallOfFameTitle>
-          {hallOfFame.map((user) => (
-            <HallOfFameItem key={user.id} onClick={() => setSelectedUser(user.name)}>
-              <HallOfFameText>{user.name}</HallOfFameText>
-              <span>❤️ {user.likes}</span>
+          {hallOfFame.map((feed) => (
+            <HallOfFameItem
+              key={feed.id}
+              onClick={() => setSelectedUser(feed.userName)}
+            >
+              <HallOfFameText>{feed.userName}</HallOfFameText>
+              <span>❤️ {feed.likes.length}</span>
             </HallOfFameItem>
           ))}
         </HallOfFameBox>
       </LeftSection>
+
       <RightSection>
         {filteredFeeds.map((feed) => (
-          <FeedBox key={feed.id} feed={feed} />
+          <FeedBox
+            key={feed.id}
+            feed={feed}
+            onCommentClick={() => handleCommentClick(feed)}
+            onToggleLike={toggleLike} // 수정: toggleLike 전달
+          />
         ))}
       </RightSection>
+
+      {isModalOpen && selectedFeed && (
+        <CommentModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          feedId={selectedFeed.id}
+        />
+      )}
     </PageContainer>
   );
 }
