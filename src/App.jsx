@@ -5,11 +5,11 @@ import { FeedProvider } from "./context/FeedContext";
 
 const App = () => {
   return (
-    <FeedProvider>      
-    <Provider>
+    <FeedProvider>
+      <Provider>
         <GlobalStyle />
-        <Router />
-    </Provider>
+        <Router /> {/* Router 컴포넌트가 이미 모든 경로를 처리 */}
+      </Provider>
     </FeedProvider>
   );
 };
