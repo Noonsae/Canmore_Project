@@ -21,14 +21,6 @@ export const FeedProvider = ({ children }) => {
 
   const addPost = (newPost) => {
     setFeeds((prevFeeds) => [newPost, ...prevFeeds]);
-
-    // setFeeds((prevFeeds) => {
-    //   if (prevFeeds.some((feed) => feed.id === newPost.id)) {
-    //     console.warn("Duplicate feed ID detected");
-    //     return prevFeeds;
-    //   }
-    //   return [newPost, ...prevFeeds];
-    // });
   };
 
   const addComment = (feedId, newComment) => { // 고유 ID와 댓글의 객체를 매개변수로 받고 있음
@@ -85,6 +77,21 @@ export const FeedProvider = ({ children }) => {
     );
   };
 
+  const toggleLike = (feedId, userId) => {
+    setFeeds((prevFeeds) =>
+      prevFeeds.map((feed) =>
+        feed.id === feedId
+          ? {
+              ...feed,
+              likes: feed.likes.includes(userId)
+                ? feed.likes.filter((id) => id !== userId)
+                : [...feed.likes, userId],
+            }
+          : feed
+      )
+    );
+  };
+
   return (
     <FeedContext.Provider
       value={{
@@ -95,6 +102,7 @@ export const FeedProvider = ({ children }) => {
         updateComment,
         deletePost,
         deleteComment,
+        toggleLike,
       }}
     >
       {children}
