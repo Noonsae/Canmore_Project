@@ -65,6 +65,14 @@ const ModalContent = styled.div`
   }
 `;
 
+const SearchBar = styled.input`
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  width: 100%;
+`;
+
 const FollowerList = styled.div`
   display: flex;
   flex-direction: column;
@@ -88,6 +96,7 @@ const FollowerItem = styled.div`
 // 컴포넌트 정의
 function FollowerBox() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 추가
   const navigate = useNavigate();
 
   const followers = [
@@ -99,12 +108,16 @@ function FollowerBox() {
     { id: 6, name: '유저_06', image: 'https://via.placeholder.com/80', joinedAt: '2023-10-29' },
     { id: 7, name: '유저_07', image: 'https://via.placeholder.com/80', joinedAt: '2023-10-28' },
     { id: 8, name: '유저_08', image: 'https://via.placeholder.com/80', joinedAt: '2023-10-27' }
-  ].sort((a, b) => new Date(b.joinedAt) - new Date(a.joinedAt)); // 최근 가입 순으로 정렬
+  ].sort((a, b) => new Date(b.joinedAt) - new Date(a.joinedAt));
 
   const handleFollowerClick = (id) => {
     navigate(`/user/${id}`);
     setIsModalOpen(false);
   };
+
+  const filteredFollowers = followers.filter((follower) =>
+    follower.name.toLowerCase().includes(searchTerm.toLowerCase())
+  ); // 검색어로 필터링
 
   return (
     <FollowerContainer>
@@ -135,8 +148,15 @@ function FollowerBox() {
       >
         <ModalContent>
           <h2>팔로워 목록</h2>
+          {/* 검색 바 */}
+          <SearchBar
+            type="text"
+            placeholder="유저 이름 검색"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
           <FollowerList>
-            {followers.map((follower) => (
+            {filteredFollowers.map((follower) => (
               <FollowerItem key={follower.id} onClick={() => handleFollowerClick(follower.id)}>
                 {follower.name} (가입일: {follower.joinedAt})
               </FollowerItem>
