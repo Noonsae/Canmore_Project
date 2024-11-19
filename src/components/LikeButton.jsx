@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 function LikeButton({toggleLike,postId}) {
   const [likes, setLikes] = useState({}); // 사용자 ID를 키로 하는 객체로 초기화.
-  const userId = 'user1'; // 예시로 사용자 ID를 지정합니다. 실제로는 로그인한 사용자의 ID를 사용.
+  const userId = 'd860bab7-4d63-4aa9-aa75-d6b100d03c37'; // 예시로 user3 을 썼음. 실제로는 로그인한 사용자의 ID를 사용해야함.
 
   const addLike = () => {
     setLikes((prevLikes) => ({
