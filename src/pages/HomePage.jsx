@@ -37,7 +37,7 @@ const HallOfFameText = styled.span`
   font-weight: bold;
 `;
 
-function Home() {
+function HomePage() {
   const [selectedUser, setSelectedUser] = useState(null);
 
   // 임시 데이터
@@ -102,4 +102,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomePage;

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Modal from 'react-modal';
 import FollowerBox from './FollowerBox';
+import supabase from '../supabase/Supabase';
 
 Modal.setAppElement('#root');
 
@@ -243,7 +244,7 @@ function ProfileBox() {
 
   return (
     <ProfileContainer>
-      {/* 사진 영역 */}
+      {/* 사진 영역 */} 그림을 cdn? 퍼블릭url 업로드 (공용) 이미지의 주소값 수파베이스에 넣어! export 이미지 업로드 함수 선언 ^위에서 ->데
       <PhotoContainer>
         <ProfileImage src={profileImage} alt="프로필 사진" />
         <EditPhotoButton onClick={() => setIsPhotoModalOpen(true)}>수정</EditPhotoButton>
