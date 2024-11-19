@@ -21,7 +21,7 @@ const CommentModal = ({ isOpen, onClose, feedId }) => {
     const confirmSave = window.confirm("댓글을 저장하시겠습니까?");
     if (!confirmSave) return;
 
-    const newCommentData = {
+    const newCommentData = { // 이 부분은 슈퍼베이스로 대체 될듯
       id: Date.now(),
       userName: "로그인한 사용자", // 실제 로그인 사용자 이름으로 대체
       content: newComment,

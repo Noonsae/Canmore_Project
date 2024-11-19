@@ -9,7 +9,7 @@ const LoginPage = () => {
   const goToHome = () => {
     navigate('Home');
   };
-
+ 
   return (
     <>
       <div className="login-container">
