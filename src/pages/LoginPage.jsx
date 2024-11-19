@@ -9,7 +9,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f9f9f9; /* 회원가입 페이지와 동일한 배경 */
+  background-color: #f9f9f9;
 `;
 
 const LoginBox = styled.div`
@@ -72,16 +72,15 @@ const Message = styled.p`
   margin-top: 10px;
 `;
 
-const SignUpButton = styled.button`
+const LinkButton = styled.button`
   margin-top: 10px;
   width: 100%;
-  padding: 10px;
-  background-color: transparent;
+  background: none;
+  border: none;
   color: #007bff;
   font-size: 14px;
-  border: none;
-  cursor: pointer;
   text-decoration: underline;
+  cursor: pointer;
 
   &:hover {
     text-decoration: none;
@@ -89,29 +88,38 @@ const SignUpButton = styled.button`
 `;
 
 const LoginPage = () => {
-  // 입력 상태 관리
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState(''); // 에러 또는 성공 메시지 표시
+  const [message, setMessage] = useState('');
+  const [resetMessage, setResetMessage] = useState('');
   const navigate = useNavigate();
 
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
+  // 로그인 처리 함수
   const handleLogin = async (e) => {
     e.preventDefault();
-    setMessage(''); // 메시지 초기화
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
+    setMessage('');
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
-      setMessage(`로그인 실패: ${error.message}`); // 에러 메시지 표시
+      setMessage(`이메일 또는 비밀번호가 올바르지 않습니다.`);
+    } else {      
+      navigate('/home');
+    }
+  };
+
+  // 비밀번호 재설정 요청 함수
+  const handlePasswordReset = async () => {
+    setResetMessage('');
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      // 비밀번호 재설정 페이지로 리디렉션
+      redirectTo: 'http://localhost:5173/reset', 
+    });
+    if (error) {
+      setResetMessage(`비밀번호 재설정 실패: ${error.message}`);
     } else {
-      setMessage('로그인 성공!'); // 성공 메시지 표시
-      navigate('/home'); // 홈 페이지로 이동
+      setResetMessage('비밀번호 재설정 이메일이 전송되었습니다.');
     }
   };
 
@@ -139,7 +147,9 @@ const LoginPage = () => {
           <Button type="submit">로그인</Button>
         </form>
         {message && <Message>{message}</Message>}
-        <SignUpButton onClick={() => navigate('/sign-up')}>회원가입</SignUpButton>
+        <LinkButton onClick={handlePasswordReset}>비밀번호를 잊으셨나요?</LinkButton>
+        {resetMessage && <Message style={{ color: 'green' }}>{resetMessage}</Message>}
+        <LinkButton onClick={() => navigate('/sign-up')}>회원가입</LinkButton>
       </LoginBox>
     </Container>
   );
