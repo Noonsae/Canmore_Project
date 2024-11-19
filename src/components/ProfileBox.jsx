@@ -29,7 +29,7 @@ const ProfileImage = styled.img`
 const EditPhotoButton = styled.button`
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: 60px;
   background-color: #4267b2;
   color: white;
   border: none;
@@ -37,6 +37,19 @@ const EditPhotoButton = styled.button`
   cursor: pointer;
   &:hover {
     background-color: #365899;
+  }
+`;
+const DeletePhotoButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px; /* 삭제 버튼의 위치 */
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  &:hover {
+    background-color: #c82333;
   }
 `;
 
@@ -67,20 +80,20 @@ const EditBioButton = styled.button`
   }
 `;
 
-const DeletePhotoButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
+// const DeletePhotoButton = styled.button`
+//   position: absolute;
+//   top: 10px;
+//   right: 10px;
+//   background-color: #dc3545;
+//   color: white;
+//   border: none;
+//   padding: 0.5rem 1rem;
+//   cursor: pointer;
 
-  &:hover {
-    background-color: #c82333;
-  }
-`;
+//   &:hover {
+//     background-color: #c82333;
+//   }
+// `;
 
 const FollowerContainer = styled.div`
   background: #fff;
@@ -211,7 +224,6 @@ function ProfileBox() {
     }
     setIsPhotoModalOpen(false);
   };
-
   const handleDeletePhoto = () => {
     setProfileImage('https://via.placeholder.com/300'); // 디폴트 이미지로 복원
   };
@@ -237,13 +249,20 @@ function ProfileBox() {
         <EditPhotoButton onClick={() => setIsPhotoModalOpen(true)}>수정</EditPhotoButton>
         <DeletePhotoButton onClick={handleDeletePhoto}>삭제</DeletePhotoButton>
       </PhotoContainer>
+      <Modal isOpen={isPhotoModalOpen} onRequestClose={() => setIsPhotoModalOpen(false)}>
+        <ModalContent>
+          <h2>사진 수정</h2>
+          <input id="profile-image-input" type="text" defaultValue={profileImage} />
+          <SaveButton onClick={handleSavePhoto}>저장</SaveButton>
+          <CancelButton onClick={() => setIsPhotoModalOpen(false)}>취소</CancelButton>
+        </ModalContent>
+      </Modal>
 
       {/* 자기소개 영역 */}
       <BioContainer>
         <BioText>{bio}</BioText>
         <EditBioButton onClick={() => setIsBioModalOpen(true)}>수정</EditBioButton>
       </BioContainer>
-
       <Modal isOpen={isPhotoModalOpen} onRequestClose={() => setIsPhotoModalOpen(false)}>
         <ModalContent>
           <h2>사진 수정</h2>
