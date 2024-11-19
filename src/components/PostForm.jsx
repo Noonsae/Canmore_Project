@@ -5,32 +5,32 @@ const PostForm = () => {
   const { addPost } = useFeed();
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
-  const fileInputRef = useRef(null); // 파일 입력 필드 참조
+  const fileInputRef = useRef(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!content.trim()) {
       alert("내용을 입력하세요.");
       return;
     }
 
-    // 알림창으로 저장 여부 확인
-    const confirmSave = window.confirm("뉴스피드를 저장하시겠습니까?");
-    if (!confirmSave) return;
+    // 이미지 파일 URL 생성
+    const imageUrl = image ? URL.createObjectURL(image) : null;
 
     const newPost = {
       id: Date.now(),
+      userName: "로그인한 사용자", // 예시 사용자 이름
       content,
-      image_url: image ? URL.createObjectURL(image) : null,
+      image_url: imageUrl, // 이미지 URL 저장
       createdAt: new Date().toLocaleString(),
       comments: [],
+      likes: [],
     };
 
-    addPost(newPost); // FeedContext로 뉴스피드 추가
+    addPost(newPost); // FeedContext에 추가
     setContent(""); // 입력 초기화
-    setImage(null); // 이미지 상태 초기화
-    fileInputRef.current.value = ""; // 파일 입력 필드 초기화
+    setImage(null); // 이미지 초기화
+    fileInputRef.current.value = ""; // 파일 필드 초기화
   };
 
   return (
@@ -42,7 +42,7 @@ const PostForm = () => {
       />
       <input
         type="file"
-        ref={fileInputRef} // 파일 입력 필드 참조 연결
+        ref={fileInputRef}
         onChange={(e) => setImage(e.target.files[0])}
         accept="image/*"
       />
