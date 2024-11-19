@@ -1,17 +1,15 @@
-import React from 'react';
 import Header from './Header';
 import styled from 'styled-components';
 
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
 `;
 
 const Content = styled.main`
   flex: 1;
-  padding: 2rem;
-  background-color: #f9f9f9;
+  background-color: #fff;
 `;
 
 const Layout = ({ children }) => {
