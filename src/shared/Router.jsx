@@ -5,6 +5,7 @@ import FeedPage from "../pages/FeedPage";
 import Homepage from "../pages/Homepage";
 import TimeLine from "../pages/TimeLine";
 import Layout from "../components/Layout";
+import Bookmark from "../pages/Bookmark";
 
 const Router = () => (
   <BrowserRouter> 
@@ -15,6 +16,7 @@ const Router = () => (
       <Route path="/" element={<Layout><Homepage /></Layout>}/>
       <Route path="/timeline" element={<TimeLine/>}/>
       <Route path="/write" element={<FeedPage />} />
+      <Route path="/bookmark" element={<Bookmark />} />
     </Routes>
   </BrowserRouter>
 );
