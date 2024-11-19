@@ -36,8 +36,7 @@ const LoginPage = () => {
       email,
       password,
     });
-    console.log("signup: ", { data, error }); // data에 뭐 들어있는지 확인하기
-    // setUser(data.user);
+    console.log("signup: ", { data, error });
   };
 
   const signInUser = async () => {
@@ -49,17 +48,7 @@ const LoginPage = () => {
     // setUser(data.user);
   };
 
-  const signOutUser = async () => {
-    const { data, error } = await supabase.auth.signOut();
-    console.log("signout: ", { data, error }); // data는 딱히 필요없을 듯
-    // setUser(null);
-  };
-
   const navigate = useNavigate();
-
-  // const goToHome = () => {
-  //   navigate('Home');
-  // };
 
   const goToSignUp = () => {
     navigate('/sign-up');
@@ -86,15 +75,13 @@ const LoginPage = () => {
             회원가입
           </button>
 
-          {/* <img src="/ms.png" alt="지현토끼" size={"contain"}/> */}
+          {/* <img src={imgSlide} alt="" size={"cover"}/> */}
         </div>
-      
     );
   }  else {
     return (
       <>
       <Home/>
-      <button onClick={signOutUser}>로그아웃</button>
       </>
     );
   }
