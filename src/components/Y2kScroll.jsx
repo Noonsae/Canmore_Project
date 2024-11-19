@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-const Feed = () => {
+const Y2kScroll = () => {
   const [index, setIndex] = useState(3);
   const [feeds, setFeeds] = useState(Array.from({ length: 4 }, (_, index) => `피드 ${index + 1}`));
   const [loading, setLoading] = useState(false);
@@ -42,4 +42,4 @@ const Feed = () => {
   );
 };
 
-export default Feed;
+export default Y2kScroll;
