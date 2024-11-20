@@ -1,8 +1,10 @@
-import { useState, useRef } from "react";
+import { useState, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import supabase from "../supabase/Supabase";
+import supabase from "../supabase/supabase";
+import { UserContext } from '../context/userContext';
 
 const PostForm = () => {
+  const { user_id } = useContext(UserContext);
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -12,7 +14,7 @@ const PostForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!userId) {
+    if (!user_id) {
       alert("사용자 정보가 확인되지 않습니다. 다시 로그인해주세요.");
       return;
     }
@@ -46,10 +48,29 @@ const PostForm = () => {
         console.log(publicURL);
         imageUrl = publicURL;
       }
+
+      if (image) {
+  const fileName = `post/_${Date.now()}_${image.name}`;
+  const { error: storageError } = await supabase.storage
+    .from("images")
+    .upload(fileName, image);
+
+  if (storageError) throw storageError;
+
+  const { data: publicURLData, error: publicURLError } = supabase.storage
+    .from("images")
+    .getPublicUrl(fileName);
+
+  if (publicURLError) throw publicURLError;
+
+  console.log("Public URL:", publicURLData.publicUrl); // 디버깅용 메시지
+  imageUrl = publicURLData.publicUrl; // `publicUrl` 프로퍼티 사용
+}
+
       // 뉴스피드 데이터 Supabase에 업로드
       const { error } = await supabase.from("posts").insert([
         {
-          user_id: userId, 
+          user_id,
           content,
           image_url: imageUrl,
           create_at: new Date().toISOString(),
