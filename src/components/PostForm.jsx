@@ -1,29 +1,29 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import supabase from "../supabase/Supabase";
 
-const PostForm = () => {
+const PostForm = ({userId}) => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [userId, setUserId] = useState(null);
+  // const [userId, setUserId] = useState(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data: authData, error } = await supabase.auth.getUser(); // 로그인된 사용자 정보 가져오기
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const { data: authData, error } = await supabase.auth.getUser(); // 로그인된 사용자 정보 가져오기
 
-      if (error) {
-        console.error("Error fetching user:", error);
-        alert("로그인된 사용자를 확인할 수 없습니다.");
-        return;
-      }
-      setUserId(authData.user.id || null); 
-    };
+  //     if (error) {
+  //       console.error("Error fetching user:", error);
+  //       alert("로그인된 사용자를 확인할 수 없습니다.");
+  //       return;
+  //     }
+  //     setUserId(authData.user.id || null); 
+  //   };
 
-    fetchUser();
-  }, []);
+  //   fetchUser();
+  // }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

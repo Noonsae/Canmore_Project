@@ -11,7 +11,7 @@ import Layout from '../components/Layout';
 import Bookmark from '../pages/Bookmark';
 import ResetPasswordPage from '../pages/ResetPasswordPage';
 
-const Router = () => (
+const Router = ({userId}) => (
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<LoginPage />} />
@@ -26,8 +26,8 @@ const Router = () => (
           </Layout>
         }
       />
-      <Route path="/timeline" element={<TimeLine />} />
-      <Route path="/write" element={<FeedPage />} />
+      <Route path="/timeline" element={<TimeLine userId={userId}/>} />
+      <Route path="/write" element={<FeedPage userId={userId}/>} />
       <Route path="/bookmark" element={<Bookmark />} />
       <Route path="/reset" element={<ResetPasswordPage />} />
     </Routes>
