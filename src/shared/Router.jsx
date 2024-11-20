@@ -1,10 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import SignUpPage from '../pages/SignUpPage';
-import Home from '../pages/Home';
-import Layout from '../components/Layout';
 import LoginPage from '../pages/LoginPage';
-import FeedPage from '../pages/FeedPage';
+import SignUpPage from '../pages/SignUpPage';
+import Homepage from '../pages/Homepage';
 import TimeLine from '../pages/TimeLine';
+import FeedPage from '../pages/FeedPage';
+import Layout from '../components/Layout';
+import Bookmark from '../pages/Bookmark';
+import ResetPasswordPage from '../pages/ResetPasswordPage';
 
 const Router = () => (
   <BrowserRouter>
@@ -12,16 +14,19 @@ const Router = () => (
       <Route path="/" element={<LoginPage />} />
       <Route path="/sign-up" element={<SignUpPage />} />
       <Route path="/FeedPage" element={<FeedPage />} />
+      <Route path="/user/:id" element={<FeedPage />} />
       <Route
-        path="/Home"
+        path="/home"
         element={
           <Layout>
-            <Home />
+            <Homepage />
           </Layout>
         }
       />
       <Route path="/timeline" element={<TimeLine />} />
-      <Route path="/user/:id" element={<FeedPage />} />
+      <Route path="/write" element={<FeedPage />} />
+      <Route path="/bookmark" element={<Bookmark />} />
+      <Route path="/reset" element={<ResetPasswordPage />} />
     </Routes>
   </BrowserRouter>
 );

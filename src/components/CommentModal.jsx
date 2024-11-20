@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import { useFeed } from "../context/FeedContext";
-import styled from "styled-components";
+import { useState, useEffect } from 'react';
+import { useFeed } from '../context/FeedContext';
+import styled from 'styled-components';
 
 const CommentModal = ({ isOpen, onClose, feedId }) => {
   const { feeds, addComment, deleteComment } = useFeed();
   const [currentFeed, setCurrentFeed] = useState(null); // 현재 선택된 피드
-  const [newComment, setNewComment] = useState(""); // 새 댓글 내용
+  const [newComment, setNewComment] = useState(''); // 새 댓글 내용
 
   useEffect(() => {
     const feed = feeds.find((feed) => feed.id === feedId);
@@ -14,26 +14,27 @@ const CommentModal = ({ isOpen, onClose, feedId }) => {
 
   const handleSaveComment = () => {
     if (!newComment.trim()) {
-      alert("댓글을 작성하세요!");
+      alert('댓글을 작성하세요!');
       return;
     }
 
-    const confirmSave = window.confirm("댓글을 저장하시겠습니까?");
+    const confirmSave = window.confirm('댓글을 저장하시겠습니까?');
     if (!confirmSave) return;
 
-    const newCommentData = { // 이 부분은 슈퍼베이스로 대체 될듯
+    const newCommentData = {
+      // 이 부분은 슈퍼베이스로 대체 될듯
       id: Date.now(),
-      userName: "로그인한 사용자", // 실제 로그인 사용자 이름으로 대체
+      userName: '로그인한 사용자', // 실제 로그인 사용자 이름으로 대체
       content: newComment,
-      createdAt: new Date().toLocaleString(),
+      createdAt: new Date().toLocaleString()
     };
 
     addComment(feedId, newCommentData); // FeedContext에서 댓글 추가
-    setNewComment(""); // 입력 초기화
+    setNewComment(''); // 입력 초기화
   };
 
   const handleDeleteComment = (commentId) => {
-    if (window.confirm("이 댓글을 삭제하시겠습니까?")) {
+    if (window.confirm('이 댓글을 삭제하시겠습니까?')) {
       deleteComment(feedId, commentId); // FeedContext에서 댓글 삭제
     }
   };
@@ -51,14 +52,18 @@ const CommentModal = ({ isOpen, onClose, feedId }) => {
           <p>{currentFeed.content}</p>
           <h4>댓글</h4>
           <CommentList>
-            {currentFeed.comments.map((comment) => (
-              <CommentItem key={comment.id}>
-                <strong>{comment.userName}</strong>
-                <p>{comment.content}</p>
-                <small>작성 시간: {comment.createdAt}</small>
-                <button onClick={() => handleDeleteComment(comment.id)}>삭제</button>
-              </CommentItem>
-            ))}
+            {currentFeed.comments && currentFeed.comments.length > 0 ? (
+              currentFeed.comments.map((comment) => (
+                <CommentItem key={comment.id}>
+                  <strong>{comment.userName}</strong>
+                  <p>{comment.content}</p>
+                  <small>작성 시간: {comment.createdAt}</small>
+                  <button onClick={() => handleDeleteComment(comment.id)}>삭제</button>
+                </CommentItem>
+              ))
+            ) : (
+              <p>댓글이 없습니다.</p>
+            )}
           </CommentList>
           <CommentInput>
             <textarea
