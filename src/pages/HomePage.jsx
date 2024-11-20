@@ -38,7 +38,7 @@ const HallOfFameText = styled.span`
   font-weight: bold;
 `;
 
-function Home() {
+function HomePage() {
   const { feeds } = useFeed(); 
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedFeed, setSelectedFeed] = useState(null);
@@ -101,4 +101,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomePage;
