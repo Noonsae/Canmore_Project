@@ -1,36 +1,90 @@
-import { useState, useRef } from "react";
-import { useFeed } from "../context/FeedContext";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import supabase from "../supabase/Supabase";
 
 const PostForm = () => {
-  const { addPost } = useFeed();
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState(null);
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: authData, error } = await supabase.auth.getUser(); // 로그인된 사용자 정보 가져오기
+
+      if (error) {
+        console.error("Error fetching user:", error);
+        alert("로그인된 사용자를 확인할 수 없습니다.");
+        return;
+      }
+      setUserId(authData.user.id || null); 
+    };
+
+    fetchUser();
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!userId) {
+      alert("사용자 정보가 확인되지 않습니다. 다시 로그인해주세요.");
+      return;
+    }
+
     if (!content.trim()) {
       alert("내용을 입력하세요.");
       return;
     }
 
-    // 이미지 파일 URL 생성
-    const imageUrl = image ? URL.createObjectURL(image) : null;
+    try {
+      setLoading(true);
 
-    const newPost = {
-      id: Date.now(),
-      userName: "로그인한 사용자", // 예시 사용자 이름
-      content,
-      image_url: imageUrl, // 이미지 URL 저장
-      createdAt: new Date().toLocaleString(),
-      comments: [],
-      likes: [],
-    };
+      let imageUrl = null;
 
-    addPost(newPost); // FeedContext에 추가
-    setContent(""); // 입력 초기화
-    setImage(null); // 이미지 초기화
-    fileInputRef.current.value = ""; // 파일 필드 초기화
+      // 이미지 파일 업로드
+      if (image) {
+        const fileName = `${userId}-${Date.now()}-${image.name}`;
+        const { error: storageError } = await supabase.storage
+          .from("images")
+          .upload(fileName, image);
+
+        if (storageError) throw storageError;
+
+        const { publicURL, error: publicURLError } = supabase.storage
+          .from("images")
+          .getPublicUrl(fileName);
+
+        if (publicURLError) throw publicURLError;
+
+        imageUrl = publicURL;
+      }
+      console.log({userId})
+      // 뉴스피드 데이터 Supabase에 업로드
+      const { error } = await supabase.from("posts").insert([
+        {
+          user_id: userId, 
+          content,
+          image_url: imageUrl,
+          create_at: new Date().toISOString(),
+        },
+      ]);
+
+      if (error) throw error;
+
+      alert("뉴스피드가 성공적으로 작성되었습니다!");
+      navigate("/home");
+    } catch (error) {
+      console.error("Error uploading post:", error);
+      alert("뉴스피드 작성 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
+
+    setContent("");
+    setImage(null);
+    fileInputRef.current.value = "";
   };
 
   return (
@@ -39,14 +93,18 @@ const PostForm = () => {
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="뉴스피드를 작성하세요"
+        disabled={loading}
       />
       <input
         type="file"
         ref={fileInputRef}
         onChange={(e) => setImage(e.target.files[0])}
         accept="image/*"
+        disabled={loading}
       />
-      <button type="submit">작성</button>
+      <button type="submit" disabled={loading}>
+        {loading ? "작성 중..." : "작성"}
+      </button>
     </form>
   );
 };
