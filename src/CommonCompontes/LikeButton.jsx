@@ -1,84 +1,70 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import supabase from '../supabase/Supabase';
+import { UserContext } from '../context/userContext';
 
-function LikeButton({ postId, onLikeChange }) {
-  const [isLiked, setIsLiked] = useState(false); // 현재 포스트의 좋아요 상태
-  const [totalLikes, setTotalLikes] = useState(0); // 총 좋아요 수
-  const userId = '02e932e7-8772-4362-930e-19dac8805d20'; // 사용자 ID
+function LikeButton({ postId, initialLikeCount, onLikeChange }) {
+  const { user_id } = useContext(UserContext);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(initialLikeCount || 0);
 
-  // 초기 좋아요 상태 확인
   useEffect(() => {
+    if (!user_id) return;
+
     const fetchLikeStatus = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('likes')
-          .select('post_id')
-          .eq('user_id', userId)
-          .eq('post_id', postId);
-
-        if (error) {
-          console.error('Error fetching like status:', error.message);
-          return;
-        }
-
-        setIsLiked(data.length > 0);
-      } catch (err) {
-        console.error('Unexpected error:', err);
-      }
-    };
-
-    fetchLikeStatus();
-  }, [postId, userId]);
-
-  // 좋아요 추가
-  const addLike = async () => {
-    try {
-      const { error } = await supabase.from('likes').insert({
-        user_id: userId,
-        post_id: postId,
-      });
-
-      if (error) {
-        console.error('Error adding like:', error.message);
-        return;
-      }
-
-      setIsLiked(true);
-      setTotalLikes((prev) => prev + 1);
-      onLikeChange(true); // 부모 컴포넌트에 좋아요 상태 전달
-    } catch (err) {
-      console.error('Unexpected error adding like:', err);
-    }
-  };
-
-  // 좋아요 해제
-  const removeLike = async () => {
-    try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('likes')
-        .delete()
-        .eq('user_id', userId)
+        .select('id')
+        .eq('user_id', user_id)
         .eq('post_id', postId);
 
       if (error) {
-        console.error('Error removing like:', error.message);
+        console.error('Error fetching like status:', error);
         return;
       }
 
-      setIsLiked(false);
-      setTotalLikes((prev) => Math.max(0, prev - 1));
-      onLikeChange(false); // 부모 컴포넌트에 좋아요 상태 전달
-    } catch (err) {
-      console.error('Unexpected error removing like:', err);
+      setIsLiked(data.length > 0);
+    };
+
+    fetchLikeStatus();
+  }, [postId, user_id]);
+
+  const toggleLike = async () => {
+    if (!user_id) return;
+
+    try {
+      if (isLiked) {
+        const { error } = await supabase
+          .from('likes')
+          .delete()
+          .eq('user_id', user_id)
+          .eq('post_id', postId);
+
+        if (error) throw error;
+
+        setIsLiked(false);
+        setLikeCount((prev) => Math.max(0, prev - 1));
+        onLikeChange(postId, false);
+      } else {
+        const { error } = await supabase.from('likes').insert({
+          user_id,
+          post_id: postId,
+        });
+
+        if (error) throw error;
+
+        setIsLiked(true);
+        setLikeCount((prev) => prev + 1);
+        onLikeChange(postId, true);
+      }
+    } catch (error) {
+      console.error('Error toggling like:', error);
     }
   };
 
   return (
-    <div>
-      <button onClick={isLiked ? removeLike : addLike}>
-        {isLiked ? `♥ ${totalLikes}` : `♡ ${totalLikes}`}
-      </button>
-    </div>
+    <button onClick={toggleLike}>
+      {isLiked ? `♥ ${likeCount}` : `♡ ${likeCount}`}
+    </button>
   );
 }
 

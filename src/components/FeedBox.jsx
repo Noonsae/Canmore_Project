@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { UserContext } from '../context/userContext';
+import LikeButton from '../CommonCompontes/LikeButton';
 
 const FeedContainer = styled.div`
   margin-bottom: 1rem;
@@ -65,7 +66,7 @@ const ActionButton = styled.button`
   }
 `;
 
-function FeedBox({ feed, onCommentClick, onToggleLike, onUpdate, onDelete, userId }) {
+function FeedBox({ feed, onCommentClick, onUpdate, onDelete, onLikeChange }) {
   const { user_id } = useContext(UserContext);
   const [showFullContent, setShowFullContent] = useState(false); // 더보기 상태 관리
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 상태
@@ -106,7 +107,11 @@ function FeedBox({ feed, onCommentClick, onToggleLike, onUpdate, onDelete, userI
       <FeedFooter>
         {/* 좋아요/댓글 버튼: 왼쪽 정렬 */}
         <LeftActions>
-          <button onClick={() => onToggleLike(feed.id, userId)}>좋아요 ({feed.likes})</button>
+          <LikeButton
+            postId={feed.id}
+            initialLikeCount={feed.likes}
+            onLikeChange={onLikeChange}
+          />
           <button onClick={onCommentClick}>댓글 달기 ({feed.comments})</button>
         </LeftActions>
 
