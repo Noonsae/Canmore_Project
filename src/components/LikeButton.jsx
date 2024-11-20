@@ -1,30 +1,60 @@
-// import React from 'react'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import supabase from '../supabase/Supabase';
 
-function LikeButton({toggleLike,postId}) {
-  const [likes, setLikes] = useState({}); // 사용자 ID를 키로 하는 객체로 초기화.
-  const userId = 'user1'; // 예시로 사용자 ID를 지정합니다. 실제로는 로그인한 사용자의 ID를 사용.
+// Supabase 클라이언트 설정
 
-  const addLike = () => {
+function LikeButton({ toggleLike, postId }) {
+  const [likes, setLikes] = useState({});
+  const userId = 'd860bab7-4d63-4aa9-aa75-d6b100d03c37'; // 실제 사용자 ID로 대체해야 함.
+
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때 좋아요 수를 가져옴
+    const fetchLikes = async () => {
+      const { data, error } = await supabase
+        .from('likes') // 'likes' 테이블에서
+        .select('*')
+        .eq('post_id', postId)
+        .eq('user_id', userId);
+
+      if (error) {
+        console.error('Error fetching likes:', error);
+      } else {
+        const userLikes = data.length > 0 ? data[0].count : 0;
+        setLikes({ [userId]: userLikes });
+      }
+    };
+
+    fetchLikes();
+  }, [postId]);
+
+  const addLike = async () => {
+    await supabase.from('likes').upsert({ post_id: postId, user_id: userId, count: (likes[userId] || 0) + 1 });
+
     setLikes((prevLikes) => ({
       ...prevLikes,
-      [userId]: (prevLikes[userId] || 0) + 1 // 이전 좋아요 수에 1을 +.
+      [userId]: (prevLikes[userId] || 0) + 1
     }));
-    toggleLike(postId); // 북마크 추가 함수 호출
+    toggleLike(postId);
   };
 
-  const removeLike = () => {
+  const removeLike = async () => {
+    await supabase
+      .from('likes')
+      .update({ count: Math.max((likes[userId] || 0) - 1, 0) })
+      .eq('post_id', postId)
+      .eq('user_id', userId);
+
     setLikes((prevLikes) => {
       const currentLikes = prevLikes[userId] || 0;
       return {
         ...prevLikes,
-        [userId]: currentLikes > 0 ? currentLikes - 1 : 0 // 현재 좋아요 수가 0보다 클 때만 감소합니다.
+        [userId]: currentLikes > 0 ? currentLikes - 1 : 0
       };
     });
-    toggleLike(postId); // 북마크 제거 함수 호출
+    toggleLike(postId);
   };
 
-  const totalLikes = Object.values(likes).reduce((acc, count) => acc + count, 0); // 총 좋아요 수 계산
+  const totalLikes = Object.values(likes).reduce((acc, count) => acc + count, 0);
 
   return (
     <div>
@@ -35,3 +65,6 @@ function LikeButton({toggleLike,postId}) {
 }
 
 export default LikeButton;
+
+
+
