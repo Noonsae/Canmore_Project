@@ -1,17 +1,14 @@
-
-
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from '../pages/LoginPage';
 import SignUpPage from '../pages/SignUpPage';
-import Homepage from '../pages/Homepage';
+import HomePage from '../pages/HomePage';
 import TimeLine from '../pages/TimeLine';
 import FeedPage from '../pages/FeedPage';
 import Layout from '../components/Layout';
 import Bookmark from '../pages/Bookmark';
 import ResetPasswordPage from '../pages/ResetPasswordPage';
 
-const Router = ({userId}) => (
+const Router = () => (
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<LoginPage />} />
@@ -19,23 +16,20 @@ const Router = ({userId}) => (
       <Route path="/FeedPage" element={<FeedPage />} />
       <Route path="/user/:id" element={<FeedPage />} />
       <Route
-        path="/home"
+        path="/HomePage"
         element={
           <Layout>
-            <Homepage />
+            <HomePage/>
           </Layout>
         }
       />
-      <Route path="/timeline" element={<TimeLine userId={userId}/>} />
-      <Route path="/write" element={<FeedPage userId={userId}/>} />
+      <Route path="/timeline" element={<TimeLine />} />
+      <Route path="/write" element={<FeedPage />} />
       <Route path="/bookmark" element={<Bookmark />} />
       <Route path="/reset" element={<ResetPasswordPage />} />
     </Routes>
   </BrowserRouter>
 );
 
-
-
- 
 
 export default Router;
