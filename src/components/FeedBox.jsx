@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import styled from 'styled-components';
-=======
 import { useState } from "react";
 import styled from "styled-components";
->>>>>>> c1f45b0d77484d217566d5c607e2f54fbd497c10
-
 
 const FeedContainer = styled.div`
   margin-bottom: 1rem;
