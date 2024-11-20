@@ -1,12 +1,11 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import supabase from '../supabase/Supabase'; // Supabase 클라이언트 가져오기
+import supabase from '../supabase/supabase'; // Supabase 클라이언트 가져오기
 import ProfileBox from '../components/ProfileBox';
 import FollowerBox from '../components/FollowerBox';
 import FeedBox from '../components/FeedBox';
 import CommentModal from '../components/CommentModal';
 import { PageContainer, LeftSection, RightSection } from '../styles/StHome';
-import {UserContext} from '../context/userContext'
 
 const HallOfFameBox = styled.div`
   background-color: #fff5d5;
@@ -40,13 +39,11 @@ const HallOfFameText = styled.span`
 `;
 
 function HomePage() {
-  
   const [feeds, setFeeds] = useState([]); // Supabase에서 가져온 데이터를 저장할 상태
   const [userId, setUserId] = useState(null); // 현재 로그인된 사용자 ID
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedFeed, setSelectedFeed] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
 
   // Supabase에서 데이터 가져오기
   useEffect(() => {
