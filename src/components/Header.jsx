@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import supabase from '../supabase/supabase';
 
 const HeaderContainer = styled.header`
   background-color: #f5f5f5;
@@ -33,6 +34,14 @@ const NavItem = styled(Link)`
 `;
 
 const Header = () => {
+
+    // 첫 화면으로 돌아가는 btn
+    const handleLogOut = async () => {
+      const { data, error } = await supabase.auth.signOut();
+      console.log('signout: ', { data, error });
+      useNavigate('/');
+    };
+
   return (
     <HeaderContainer>
       <SiteTitle>사이트명</SiteTitle>
@@ -41,6 +50,8 @@ const Header = () => {
         <NavItem to="/timeline">타임라인</NavItem>
         <NavItem to="/bookmark">즐겨찾기</NavItem>
         <NavItem to="/write">글쓰기</NavItem>
+        <NavItem to="/">로그아웃</NavItem>
+        <button onClick={handleLogOut}>로그아웃</button>
       </NavMenu>
     </HeaderContainer>
   );
