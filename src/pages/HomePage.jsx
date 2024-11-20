@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { useFeed } from "../context/FeedContext";
-import styled from "styled-components";
-import ProfileBox from "../components/ProfileBox";
-import FollowerBox from "../components/FollowerBox";
-import FeedBox from "../components/FeedBox";
-import CommentModal from "../components/CommentModal";
-import { PageContainer, LeftSection, RightSection } from "../styles/StHome";
+import { useState, useEffect } from 'react';
+import supabase from '../supabase/supabase';
+import styled from 'styled-components';
+import ProfileBox from '../components/ProfileBox';
+import FollowerBox from '../components/FollowerBox';
+import FeedBox from '../components/FeedBox';
+import CommentModal from '../components/CommentModal';
+import { PageContainer, LeftSection, RightSection } from '../styles/StHome';
 
 const HallOfFameBox = styled.div`
   background-color: #fff5d5;
@@ -39,23 +39,44 @@ const HallOfFameText = styled.span`
 `;
 
 function HomePage() {
-  const { feeds } = useFeed(); 
+  const [feeds, setFeeds] = useState([]);
+  const [hallOfFame, setHallOfFame] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedFeed, setSelectedFeed] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 명예의 전당 데이터: 좋아요 수로 정렬
-  const hallOfFame = feeds
-    .filter((feed) => feed.likes && Array.isArray(feed.likes)) // 수정: likes 배열 확인
-    .sort((a, b) => b.likes.length - a.likes.length)
-    .slice(0, 3);
+  useEffect(() => {
+    const fetchFeeds = async () => {
+      try {
+        const { data: posts, error: postsError } = await supabase
+          .from('posts')
+          .select('id, content, image_url, hashtag, user_id, users!inner(nickname)');
 
-  // 명예의 전당에서 선택된 사용자의 뉴스피드 필터링
-  const filteredFeeds = selectedUser
-    ? feeds.filter((feed) => feed.userName === selectedUser)
-    : feeds;
+        if (postsError) throw postsError;
 
-  // 댓글 버튼 클릭 핸들러
+        const { data: likes, error: likesError } = await supabase.from('likes').select('post_id');
+
+        if (likesError) throw likesError;
+
+        const postsWithLikes = posts.map((post) => {
+          const likeCount = likes.filter((like) => like.post_id === post.id).length;
+          return { ...post, like_count: likeCount };
+        });
+
+        const sortedHallOfFame = [...postsWithLikes].sort((a, b) => b.like_count - a.like_count).slice(0, 3);
+
+        setFeeds(postsWithLikes);
+        setHallOfFame(sortedHallOfFame);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchFeeds();
+  }, []);
+
+  const filteredFeeds = selectedUser ? feeds.filter((feed) => feed.user_id === selectedUser) : feeds;
+
   const handleCommentClick = (feed) => {
     setSelectedFeed(feed);
     setIsModalOpen(true);
@@ -69,33 +90,26 @@ function HomePage() {
         <HallOfFameBox>
           <HallOfFameTitle>명예의 전당</HallOfFameTitle>
           {hallOfFame.map((feed) => (
-            <HallOfFameItem
-              key={feed.id}
-              onClick={() => setSelectedUser(feed.userName)}
-            >
-              <HallOfFameText>{feed.userName}</HallOfFameText>
-              <span>❤️ {feed.likes.length}</span>
+            <HallOfFameItem key={feed.id} onClick={() => setSelectedUser(feed.user_id)}>
+              <HallOfFameText>{feed.users.nickname}</HallOfFameText>
+              <span>❤️ {feed.like_count || 0}</span>
             </HallOfFameItem>
           ))}
         </HallOfFameBox>
       </LeftSection>
 
       <RightSection>
-        {filteredFeeds.map((feed) => (
-          <FeedBox
-            key={feed.id}
-            feed={feed}
-            onCommentClick={() => handleCommentClick(feed)}
-          />
-        ))}
+        {filteredFeeds.length > 0 ? (
+          filteredFeeds.map((feed) => (
+            <FeedBox key={feed.id} feed={feed} onCommentClick={() => handleCommentClick(feed)} />
+          ))
+        ) : (
+          <p>피드가 없습니다.</p>
+        )}
       </RightSection>
 
       {isModalOpen && selectedFeed && (
-        <CommentModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          feedId={selectedFeed.id}
-        />
+        <CommentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} feedId={selectedFeed.id} />
       )}
     </PageContainer>
   );

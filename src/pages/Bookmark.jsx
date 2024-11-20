@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import supabase from '../supabase/supabase';
 import LikeButton from '../CommonCompontes/LikeButton';
 
@@ -10,10 +10,7 @@ const Bookmark = () => {
   useEffect(() => {
     const fetchLikedPosts = async () => {
       try {
-        const { data: likesData, error } = await supabase
-          .from('likes')
-          .select('post_id')
-          .eq('user_id', userId);
+        const { data: likesData, error } = await supabase.from('likes').select('post_id').eq('user_id', userId);
 
         if (error) {
           console.error('Error:', error.message);
@@ -45,10 +42,7 @@ const Bookmark = () => {
   const handleLikeChange = (postId, isLiked) => {
     if (isLiked) {
       // 좋아요 추가된 경우
-      setLikedImages((prev) => [
-        ...prev,
-        likedImages.find((post) => post.id === postId),
-      ]);
+      setLikedImages((prev) => [...prev, likedImages.find((post) => post.id === postId)]);
     } else {
       // 좋아요 해제된 경우
       setLikedImages((prev) => prev.filter((post) => post.id !== postId));
@@ -68,18 +62,11 @@ const Bookmark = () => {
               border: '1px solid black',
               margin: '10px',
               padding: '10px',
-              textAlign: 'center',
+              textAlign: 'center'
             }}
           >
-            <img
-              src={post.image_url}
-              alt="Liked Post"
-              style={{ width: '100px', height: '100px' }}
-            />
-            <LikeButton
-              postId={post.id}
-              onLikeChange={(isLiked) => handleLikeChange(post.id, isLiked)}
-            />
+            <img src={post.image_url} alt="Liked Post" style={{ width: '100px', height: '100px' }} />
+            <LikeButton postId={post.id} onLikeChange={(isLiked) => handleLikeChange(post.id, isLiked)} />
           </div>
         ))
       )}

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import supabase from '../supabase/supabase';
@@ -34,13 +33,12 @@ const NavItem = styled(Link)`
 `;
 
 const Header = () => {
-
-    // 첫 화면으로 돌아가는 btn
-    const handleLogOut = async () => {
-      const { data, error } = await supabase.auth.signOut();
-      console.log('signout: ', { data, error });
-      useNavigate('/');
-    };
+  // 첫 화면으로 돌아가는 btn
+  const handleLogOut = async () => {
+    const { data, error } = await supabase.auth.signOut();
+    console.log('signout: ', { data, error });
+    useNavigate('/home');
+  };
 
   return (
     <HeaderContainer>
@@ -58,4 +56,3 @@ const Header = () => {
 };
 
 export default Header;
- 

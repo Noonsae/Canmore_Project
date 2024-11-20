@@ -1,10 +1,5 @@
-<<<<<<< HEAD
+import { useState } from 'react';
 import styled from 'styled-components';
-=======
-import { useState } from "react";
-import styled from "styled-components";
->>>>>>> c1f45b0d77484d217566d5c607e2f54fbd497c10
-
 
 const FeedContainer = styled.div`
   margin-bottom: 1rem;
@@ -53,9 +48,7 @@ function FeedBox({ feed, onCommentClick, onToggleLike }) {
   const [showFullContent, setShowFullContent] = useState(false); // 추가: 더보기 기능 상태 관리
 
   const truncatedContent =
-    feed.content.length > 100 && !showFullContent
-      ? `${feed.content.slice(0, 100)}...`
-      : feed.content;
+    feed.content.length > 100 && !showFullContent ? `${feed.content.slice(0, 100)}...` : feed.content;
 
   return (
     <FeedContainer>
@@ -68,13 +61,13 @@ function FeedBox({ feed, onCommentClick, onToggleLike }) {
       <FeedFooter>
         <LeftActions>
           {/* 좋아요 버튼 */}
-          <Button onClick={() => onToggleLike(feed.id, "user1")}> {/* 수정: toggleLike와 userId 전달 */}
-            좋아요 ({feed.likes.length})
+          <Button onClick={() => onToggleLike(feed.id, 'user1')}>
+            {' '}
+            {/* 수정: toggleLike와 userId 전달 */}
+            좋아요 ({feed.likes})
           </Button>
           {/* 댓글 달기 버튼 */}
-          <Button onClick={onCommentClick}>
-            댓글 달기 ({feed.comments.length})
-          </Button>
+          <Button onClick={onCommentClick}>댓글 달기 ({feed.comments})</Button>
         </LeftActions>
       </FeedFooter>
     </FeedContainer>
