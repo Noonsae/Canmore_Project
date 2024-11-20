@@ -86,15 +86,15 @@ function HomePage() {
   // 삭제 로직
   const deletePost = async (feedId) => {
     try {
-      const { error } = await supabase.from("posts").delete().eq("id", feedId); // feed ID를 기준으로 삭제
+      const { error } = await supabase.from('posts').delete().eq('id', feedId); // feed ID를 기준으로 삭제
       if (error) throw error;
 
       // 상태에서 해당 피드 삭제
       setFeeds((prevFeeds) => prevFeeds.filter((feed) => feed.id !== feedId));
-      alert("뉴스피드가 삭제되었습니다.");
+      alert('뉴스피드가 삭제되었습니다.');
     } catch (error) {
-      console.error("Error deleting post:", error);
-      alert("뉴스피드 삭제 중 오류가 발생했습니다.");
+      console.error('Error deleting post:', error);
+      alert('뉴스피드 삭제 중 오류가 발생했습니다.');
     }
   };
 
@@ -110,9 +110,7 @@ function HomePage() {
 
       // 상태 업데이트: UI에서도 즉시 반영
       setFeeds((prevFeeds) =>
-        prevFeeds.map((feed) =>
-          feed.id === feedId ? { ...feed, content: updatedContent } : feed
-        )
+        prevFeeds.map((feed) => (feed.id === feedId ? { ...feed, content: updatedContent } : feed))
       );
 
       alert('뉴스피드가 성공적으로 수정되었습니다.');
@@ -130,29 +128,18 @@ function HomePage() {
         <HallOfFameBox>
           <HallOfFameTitle>명예의 전당</HallOfFameTitle>
           {hallOfFame.map((feed) => (
-<<<<<<< HEAD
             <HallOfFameItem key={feed.id} onClick={() => setSelectedUser(feed.user_id)}>
               <HallOfFameText>{feed.users.nickname}</HallOfFameText>
               <span>❤️ {feed.like_count || 0}</span>
-=======
-            <HallOfFameItem key={feed.id} onClick={() => setSelectedUser(feed.userName)}>
+              {/* <HallOfFameItem key={feed.id} onClick={() => setSelectedUser(feed.userName)}>
               <HallOfFameText>{feed.userName}</HallOfFameText>
-              <span>❤️ {feed.likes.length}</span>
->>>>>>> 2aad5851be525847390e008b4899c4c47d3d7710
+              <span>❤️ {feed.likes.length}</span> */}
             </HallOfFameItem>
           ))}
         </HallOfFameBox>
       </LeftSection>
 
       <RightSection>
-<<<<<<< HEAD
-        {filteredFeeds.length > 0 ? (
-          filteredFeeds.map((feed) => (
-            <FeedBox key={feed.id} feed={feed} onCommentClick={() => handleCommentClick(feed)} />
-          ))
-        ) : (
-          <p>피드가 없습니다.</p>
-=======
         <h2>뉴스피드</h2>
         {filteredFeeds.length > 0 ? (
           filteredFeeds.map((feed) => (
@@ -161,14 +148,16 @@ function HomePage() {
               feed={feed}
               onCommentClick={() => handleCommentClick(feed)}
               onUpdate={(feedId, content) => {
-                if (feed.user_id === userId) { // **현재 로그인한 사용자만 수정 가능**
+                if (feed.user_id === userId) {
+                  // **현재 로그인한 사용자만 수정 가능**
                   updatePost(feedId, content);
                 } else {
                   alert('작성자만 수정할 수 있습니다.');
                 }
               }}
               onDelete={(feedId) => {
-                if (feed.user_id === userId) { // **현재 로그인한 사용자만 삭제 가능**
+                if (feed.user_id === userId) {
+                  // **현재 로그인한 사용자만 삭제 가능**
                   deletePost(feedId);
                 } else {
                   alert('작성자만 삭제할 수 있습니다.');
@@ -178,7 +167,6 @@ function HomePage() {
           ))
         ) : (
           <p>뉴스피드가 없습니다.</p>
->>>>>>> 2aad5851be525847390e008b4899c4c47d3d7710
         )}
       </RightSection>
 

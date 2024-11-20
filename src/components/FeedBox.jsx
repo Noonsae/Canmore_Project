@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-import { useState } from 'react';
-import styled from 'styled-components';
-=======
 import { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { UserContext } from '../context/userContext';
->>>>>>> 2aad5851be525847390e008b4899c4c47d3d7710
 
 const FeedContainer = styled.div`
   margin-bottom: 1rem;
@@ -78,9 +73,6 @@ function FeedBox({ feed, onCommentClick, onToggleLike, onUpdate, onDelete, userI
 
   console.log(user_id, feed.user_id);
   const truncatedContent =
-<<<<<<< HEAD
-    feed.content.length > 100 && !showFullContent ? `${feed.content.slice(0, 100)}...` : feed.content;
-=======
     feed.content.length > 100 && !showFullContent && !isEditing ? `${feed.content.slice(0, 100)}...` : editedContent;
 
   const handleSave = () => {
@@ -95,7 +87,6 @@ function FeedBox({ feed, onCommentClick, onToggleLike, onUpdate, onDelete, userI
     onUpdate(feed.id, editedContent);
     setIsEditing(false); // 수정 모드 해제
   };
->>>>>>> 2aad5851be525847390e008b4899c4c47d3d7710
 
   return (
     <FeedContainer>
@@ -115,19 +106,8 @@ function FeedBox({ feed, onCommentClick, onToggleLike, onUpdate, onDelete, userI
       <FeedFooter>
         {/* 좋아요/댓글 버튼: 왼쪽 정렬 */}
         <LeftActions>
-<<<<<<< HEAD
-          {/* 좋아요 버튼 */}
-          <Button onClick={() => onToggleLike(feed.id, 'user1')}>
-            {' '}
-            {/* 수정: toggleLike와 userId 전달 */}
-            좋아요 ({feed.likes})
-          </Button>
-          {/* 댓글 달기 버튼 */}
-          <Button onClick={onCommentClick}>댓글 달기 ({feed.comments})</Button>
-=======
           <button onClick={() => onToggleLike(feed.id, userId)}>좋아요 ({feed.likes})</button>
           <button onClick={onCommentClick}>댓글 달기 ({feed.comments})</button>
->>>>>>> 2aad5851be525847390e008b4899c4c47d3d7710
         </LeftActions>
 
         {/* 수정/삭제/더보기 버튼: 오른쪽 정렬 */}
