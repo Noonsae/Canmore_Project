@@ -1,6 +1,6 @@
-import Router from "./shared/Router";
-import GlobalStyle from "./styles/GlobalStyle";
-import { FeedProvider } from "./context/FeedContext";
+import Router from './shared/Router';
+import GlobalStyle from './styles/GlobalStyle';
+import { FeedProvider } from './context/FeedContext';
 
 const App = () => {
   return (
