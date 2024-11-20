@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
-import supabase from '../supabase/supabase';
+import supabase from '../supabase/Supabase';
 
 // 스타일 컴포넌트 정의 (기존 스타일과 동일)
 const Container = styled.div`
