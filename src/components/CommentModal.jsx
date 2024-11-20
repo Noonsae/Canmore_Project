@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useFeed } from '../context/FeedContext';
 import styled from 'styled-components';
-import supabase from '../supabase/Supabase';
+import supabase from '../supabase/supabase';
 
 const CommentModal = ({ isOpen, onClose, feedId }) => {
   const { feeds, addComment, deleteComment } = useFeed();
