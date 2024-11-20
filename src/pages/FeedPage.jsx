@@ -4,7 +4,7 @@ import PostForm from '../components/PostForm';
 import CommentModal from '../components/CommentModal';
 import LikeButton from '../components/LikeButton';
 import ScrollToTopButton from '../components/ScrollToTopButton';
-import Y2kScroll from '../components/Y2kScroll';
+import InfScroll from '../components/InfScroll';
 
 const FeedPage = () => {
   const { feeds, updatePost, deletePost } = useFeed();
@@ -91,7 +91,7 @@ const FeedPage = () => {
                 <button onClick={() => handleCommentClick(feed)}>댓글 작성</button>
                 <LikeButton />
                 <ScrollToTopButton />
-                <Y2kScroll />
+                <InfScroll />
               </>
             )}
           </div>
