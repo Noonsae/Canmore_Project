@@ -6,16 +6,18 @@ import TimeLine from "../pages/TimeLine";
 import FeedPage from "../pages/FeedPage";
 import Layout from "../components/Layout";
 import Bookmark from "../pages/Bookmark";
+import ResetPasswordPage from "../pages/ResetPasswordPage";
 
 const Router = () => (
   <BrowserRouter> 
     <Routes>
-      <Route path="/LoginPage" element={<LoginPage />} />
+      <Route path="/" element={<LoginPage />} />
       <Route path="/sign-up" element={<SignUpPage />} />
-      <Route path="/" element={<Layout><Homepage /></Layout>}/>
+      <Route path="/home" element={<Layout><Homepage /></Layout>}/>
       <Route path="/timeline" element={<TimeLine/>}/>
       <Route path="/write" element={<FeedPage />} />
       <Route path="/bookmark" element={<Bookmark />} />
+      <Route path="/reset" element={<ResetPasswordPage />} />
     </Routes>
   </BrowserRouter>
 );
