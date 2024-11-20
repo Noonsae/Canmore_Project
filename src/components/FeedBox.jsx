@@ -1,5 +1,6 @@
-import { useState } from "react";
-import styled from "styled-components";
+import { useState, useContext } from 'react';
+import styled from 'styled-components';
+import { UserContext } from '../context/userContext';
 
 const FeedContainer = styled.div`
   margin-bottom: 1rem;
@@ -65,26 +66,27 @@ const ActionButton = styled.button`
 `;
 
 function FeedBox({ feed, onCommentClick, onToggleLike, onUpdate, onDelete, userId }) {
+  const { user_id } = useContext(UserContext);
   const [showFullContent, setShowFullContent] = useState(false); // 더보기 상태 관리
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 상태
   const [editedContent, setEditedContent] = useState(feed.content); // 수정된 내용
 
+  console.log(user_id, feed.user_id);
   const truncatedContent =
-    feed.content.length > 100 && !showFullContent && !isEditing
-      ? `${feed.content.slice(0, 100)}...`
-      : editedContent;
+    feed.content.length > 100 && !showFullContent && !isEditing ? `${feed.content.slice(0, 100)}...` : editedContent;
 
-      const handleSave = () => {
-        if (!feed.user_id || feed.user_id !== userId) { // feed.user_id가 없는 경우 예외 처리
-          alert("작성자만 수정할 수 있습니다.");
-          setIsEditing(false); // 수정 모드 해제
-          setEditedContent(feed.content); // 수정된 내용을 원래 내용으로 되돌림
-          return;
-        }
+  const handleSave = () => {
+    if (!feed.user_id || feed.user_id !== user_id) {
+      // feed.user_id가 없는 경우 예외 처리
+      alert('작성자만 수정할 수 있습니다.');
+      setIsEditing(false); // 수정 모드 해제
+      setEditedContent(feed.content); // 수정된 내용을 원래 내용으로 되돌림
+      return;
+    }
 
-        onUpdate(feed.id, editedContent);
-        setIsEditing(false); // 수정 모드 해제
-      };
+    onUpdate(feed.id, editedContent);
+    setIsEditing(false); // 수정 모드 해제
+  };
 
   return (
     <FeedContainer>
@@ -95,7 +97,7 @@ function FeedBox({ feed, onCommentClick, onToggleLike, onUpdate, onDelete, userI
         <textarea
           value={editedContent}
           onChange={(e) => setEditedContent(e.target.value)}
-          style={{ width: "100%", height: "80px", marginBottom: "10px" }}
+          style={{ width: '100%', height: '80px', marginBottom: '10px' }}
         />
       ) : (
         <p>{truncatedContent}</p>
@@ -104,12 +106,8 @@ function FeedBox({ feed, onCommentClick, onToggleLike, onUpdate, onDelete, userI
       <FeedFooter>
         {/* 좋아요/댓글 버튼: 왼쪽 정렬 */}
         <LeftActions>
-          <button onClick={() => onToggleLike(feed.id, userId)}>
-            좋아요 ({feed.likes})
-          </button>
-          <button onClick={onCommentClick}>
-            댓글 달기 ({feed.comments})
-          </button>
+          <button onClick={() => onToggleLike(feed.id, userId)}>좋아요 ({feed.likes})</button>
+          <button onClick={onCommentClick}>댓글 달기 ({feed.comments})</button>
         </LeftActions>
 
         {/* 수정/삭제/더보기 버튼: 오른쪽 정렬 */}
@@ -121,12 +119,10 @@ function FeedBox({ feed, onCommentClick, onToggleLike, onUpdate, onDelete, userI
             </>
           ) : (
             <>
-              <ActionButton onClick={() => setIsEditing(true)}>수정</ActionButton>
-              <ActionButton onClick={() => onDelete(feed.id)}>삭제</ActionButton>
+              {user_id === feed.user_id && <ActionButton onClick={() => setIsEditing(true)}>수정</ActionButton>}
+              {user_id === feed.user_id && <ActionButton onClick={() => onDelete(feed.id)}>삭제</ActionButton>}
               {feed.content.length > 100 && !showFullContent && (
-                <ActionButton onClick={() => setShowFullContent(true)}>
-                  더보기
-                </ActionButton>
+                <ActionButton onClick={() => setShowFullContent(true)}>더보기</ActionButton>
               )}
             </>
           )}
