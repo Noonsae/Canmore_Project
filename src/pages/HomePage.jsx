@@ -6,7 +6,8 @@ import FollowerBox from '../components/FollowerBox';
 import FeedBox from '../components/FeedBox';
 import CommentModal from '../components/CommentModal';
 import { PageContainer, LeftSection, RightSection } from '../styles/StHome';
-import {UserContext} from '../context/userContext'
+import { UserContext } from '../context/userContext';
+
 
 const HallOfFameBox = styled.div`
   background-color: #fff5d5;
@@ -40,13 +41,11 @@ const HallOfFameText = styled.span`
 `;
 
 function HomePage() {
-  
   const [feeds, setFeeds] = useState([]); // Supabase에서 가져온 데이터를 저장할 상태
   const [userId, setUserId] = useState(null); // 현재 로그인된 사용자 ID
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedFeed, setSelectedFeed] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
 
   // Supabase에서 데이터 가져오기
   useEffect(() => {
@@ -90,15 +89,15 @@ function HomePage() {
   // 삭제 로직
   const deletePost = async (feedId) => {
     try {
-      const { error } = await supabase.from("posts").delete().eq("id", feedId); // feed ID를 기준으로 삭제
+      const { error } = await supabase.from('posts').delete().eq('id', feedId); // feed ID를 기준으로 삭제
       if (error) throw error;
 
       // 상태에서 해당 피드 삭제
       setFeeds((prevFeeds) => prevFeeds.filter((feed) => feed.id !== feedId));
-      alert("뉴스피드가 삭제되었습니다.");
+      alert('뉴스피드가 삭제되었습니다.');
     } catch (error) {
-      console.error("Error deleting post:", error);
-      alert("뉴스피드 삭제 중 오류가 발생했습니다.");
+      console.error('Error deleting post:', error);
+      alert('뉴스피드 삭제 중 오류가 발생했습니다.');
     }
   };
 
@@ -114,9 +113,7 @@ function HomePage() {
 
       // 상태 업데이트: UI에서도 즉시 반영
       setFeeds((prevFeeds) =>
-        prevFeeds.map((feed) =>
-          feed.id === feedId ? { ...feed, content: updatedContent } : feed
-        )
+        prevFeeds.map((feed) => (feed.id === feedId ? { ...feed, content: updatedContent } : feed))
       );
 
       alert('뉴스피드가 성공적으로 수정되었습니다.');
@@ -146,30 +143,38 @@ function HomePage() {
         <h2>뉴스피드</h2>
         {filteredFeeds.length > 0 ? (
           filteredFeeds.map((feed) => (
-            <FeedBox
-              key={feed.id}
-              feed={feed}
-              onCommentClick={() => handleCommentClick(feed)}
-              onUpdate={(feedId, content) => {
-                if (feed.user_id === userId) { // **현재 로그인한 사용자만 수정 가능**
-                  updatePost(feedId, content);
-                } else {
-                  alert('작성자만 수정할 수 있습니다.');
-                }
-              }}
-              onDelete={(feedId) => {
-                if (feed.user_id === userId) { // **현재 로그인한 사용자만 삭제 가능**
-                  deletePost(feedId);
-                } else {
-                  alert('작성자만 삭제할 수 있습니다.');
-                }
-              }}
-            />
+            
+              <FeedBox
+                key={feed.id}
+                feed={feed}
+                onCommentClick={() => handleCommentClick(feed)}
+                onUpdate={(feedId, content) => {
+                  if (feed.user_id === userId) {
+                    // **현재 로그인한 사용자만 수정 가능**
+                    updatePost(feedId, content);
+                  } else {
+                    alert('작성자만 수정할 수 있습니다.');
+                  }
+                }}
+                onDelete={(feedId) => {
+                  if (feed.user_id === userId) {
+                    // **현재 로그인한 사용자만 삭제 가능**
+                    deletePost(feedId);
+                  } else {
+                    alert('작성자만 삭제할 수 있습니다.');
+                  }
+                }}
+              />
+             
+            
           ))
         ) : (
           <p>뉴스피드가 없습니다.</p>
+          
+          
         )}
       </RightSection>
+      
 
       {isModalOpen && selectedFeed && (
         <CommentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} feedId={selectedFeed.id} />
