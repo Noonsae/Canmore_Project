@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Modal from 'react-modal';
-import FollowerBox from './FollowerBox';
 import supabase from '../supabase/Supabase';
 
 Modal.setAppElement('#root');
@@ -80,21 +79,6 @@ const EditBioButton = styled.button`
     background-color: #365899;
   }
 `;
-
-// const DeletePhotoButton = styled.button`
-//   position: absolute;
-//   top: 10px;
-//   right: 10px;
-//   background-color: #dc3545;
-//   color: white;
-//   border: none;
-//   padding: 0.5rem 1rem;
-//   cursor: pointer;
-
-//   &:hover {
-//     background-color: #c82333;
-//   }
-// `;
 
 const FollowerContainer = styled.div`
   background: #fff;
@@ -199,90 +183,114 @@ const FollowerItem = styled.div`
 
 function ProfileBox() {
   const navigate = useNavigate();
-
+  const userId = '01c8403c-658a-4a17-879d-42bc40119892';
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [isBioModalOpen, setIsBioModalOpen] = useState(false);
   const [isFollowerModalOpen, setIsFollowerModalOpen] = useState(false);
-
+  const [file,setFile]=useState(null);
   const [profileImage, setProfileImage] = useState('https://via.placeholder.com/300');
   const [bio, setBio] = useState('안녕하세요! 자기소개를 입력하세요.');
-
-  const followers = [
-    { id: 1, name: '유저_01', image: 'https://via.placeholder.com/80', joinedAt: '2023-11-03' },
-    { id: 2, name: '유저_02', image: 'https://via.placeholder.com/80', joinedAt: '2023-11-02' },
-    { id: 3, name: '유저_03', image: 'https://via.placeholder.com/80', joinedAt: '2023-11-01' },
-    { id: 4, name: '유저_04', image: 'https://via.placeholder.com/80', joinedAt: '2023-10-31' },
-    { id: 5, name: '유저_05', image: 'https://via.placeholder.com/80', joinedAt: '2023-10-30' },
-    { id: 6, name: '유저_06', image: 'https://via.placeholder.com/80', joinedAt: '2023-10-29' },
-    { id: 7, name: '유저_07', image: 'https://via.placeholder.com/80', joinedAt: '2023-10-28' },
-    { id: 8, name: '유저_08', image: 'https://via.placeholder.com/80', joinedAt: '2023-10-27' }
-  ].sort((a, b) => new Date(b.joinedAt) - new Date(a.joinedAt)); // 최근 가입 순으로 정렬
-
-  const handleSavePhoto = () => {
-    const imageInput = document.getElementById('profile-image-input').value;
-    if (imageInput) {
-      setProfileImage(imageInput);
-    }
-    setIsPhotoModalOpen(false);
-  };
-  const handleDeletePhoto = () => {
-    setProfileImage('https://via.placeholder.com/300'); // 디폴트 이미지로 복원
-  };
-
-  const handleSaveBio = () => {
-    const bioInput = document.getElementById('profile-bio-input').value;
-    if (bioInput) {
-      setBio(bioInput);
-    }
-    setIsBioModalOpen(false);
-  };
+  // const [photoDelete,setPhotoDelete]=(null)
+  // const [photoChange,setphotoChange]=(null)
+  const followers = [{ id: 1, name: '유저_01', image: 'https://via.placeholder.com/80', joinedAt: '2023-11-03' }].sort(
+    (a, b) => new Date(b.joinedAt) - new Date(a.joinedAt)
+  ); // 최근 가입 순으로 정렬
 
   const handleFollowerClick = (id) => {
     navigate(`/user/${id}`);
     setIsFollowerModalOpen(false);
   };
 
+  useEffect(() => {
+    //연동
+    const fetchProfile = async () => {
+      const {
+        data: { user }
+      } = await supabase.auth.getUser();
+      const { data, error } = await supabase.from('users').select('profile, introduce').eq('id', userId).single();
+      if (error) {
+        console.error('데이터 가져오기 오류!', error);
+      } else {
+        setProfileImage(data.profile || 'https://via.placeholder.com/300');
+        setBio(data.introduce || '안녕하세요! 자기소개를 입력하세요.');
+      }
+    };
+    fetchProfile();
+  }, [userId]);
+
+  //사진 업데이트
+  const handleSavePhoto = async () => {
+    const { error: uploadError, data } = await supabase.storage
+      .from('images')
+      .upload(`profile/${Date.now()}.png`, file);
+    if (uploadError) {
+      console.error('사진업데이트 오류:', error);
+      return;
+    }
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({
+        profile: `https://mvkaxrrdnpmnqqqzkcmi.supabase.co/storage/v1/object/public/images/profile/${data.path}`
+      })
+      .eq('id', userId);
+  };
+
+//   const handeleChagePhoto= async () => {
+// const { data, error } = await supabase
+//   .from('users')
+//   .update({ 컬럼이름: 'otherValue' }) // 수정할 데이터
+//   .eq('some_column', 'someValue') // 특정할 데이터
+//   .select() // 수정 후 조회
+//   }
+
+//   const handeleDeletePhoto= async () => {
+//   const { error } = await supabase
+//     .from('users')
+//     .delete() // 삭제
+//     .eq('some_column', 'someValue'); // 특정할 데이터
+//   }
+  //자기소개 업데이트
+
+  const handleSaveBio = async () => {
+    const { error } = await supabase.from('users').update({ introduce: bio }).eq('id', userId);
+    if (error) {
+      console.error('자기소개 업데이트 오류:', error);
+      return;
+    }
+
+    console.log('자기소개 업데이트 성공');
+    setIsBioModalOpen(false); // 모달 닫기
+  }; // 조건: id가 userId와 동일한 행만 업데이트
+
   return (
     <ProfileContainer>
-      {/* 사진 영역 */} 그림을 cdn? 퍼블릭url 업로드 (공용) 이미지의 주소값 수파베이스에 넣어! export 이미지 업로드 함수 선언 ^위에서 ->데
       <PhotoContainer>
         <ProfileImage src={profileImage} alt="프로필 사진" />
         <EditPhotoButton onClick={() => setIsPhotoModalOpen(true)}>수정</EditPhotoButton>
-        <DeletePhotoButton onClick={handleDeletePhoto}>삭제</DeletePhotoButton>
+        {/* //삭제버튼 생성해야함 */}
       </PhotoContainer>
       <Modal isOpen={isPhotoModalOpen} onRequestClose={() => setIsPhotoModalOpen(false)}>
         <ModalContent>
           <h2>사진 수정</h2>
-          <input id="profile-image-input" type="text" defaultValue={profileImage} />
+          <input id="profile-image-input" type="file" value={file} onChange={(e) => setFile(e.target.files[0])} />
           <SaveButton onClick={handleSavePhoto}>저장</SaveButton>
           <CancelButton onClick={() => setIsPhotoModalOpen(false)}>취소</CancelButton>
         </ModalContent>
       </Modal>
-
       {/* 자기소개 영역 */}
       <BioContainer>
         <BioText>{bio}</BioText>
         <EditBioButton onClick={() => setIsBioModalOpen(true)}>수정</EditBioButton>
       </BioContainer>
-      <Modal isOpen={isPhotoModalOpen} onRequestClose={() => setIsPhotoModalOpen(false)}>
-        <ModalContent>
-          <h2>사진 수정</h2>
-          <input id="profile-image-input" type="text" defaultValue={profileImage} />
-          <SaveButton onClick={handleSavePhoto}>저장</SaveButton>
-          <CancelButton onClick={() => setIsPhotoModalOpen(false)}>취소</CancelButton>
-        </ModalContent>
-      </Modal>
-
       {/* 자기소개 수정 모달 */}
       <Modal isOpen={isBioModalOpen} onRequestClose={() => setIsBioModalOpen(false)}>
         <ModalContent>
           <h2>자기소개 수정</h2>
-          <textarea id="profile-bio-input" defaultValue={bio} />
+          <textarea id="profile-bio-input" value={bio} onChange={(e) => setBio(e.target.value)} />
           <SaveButton onClick={handleSaveBio}>저장</SaveButton>
           <CancelButton onClick={() => setIsBioModalOpen(false)}>취소</CancelButton>
         </ModalContent>
       </Modal>
-
       {/* 팔로워 목록 모달 */}
       <Modal isOpen={isFollowerModalOpen} onRequestClose={() => setIsFollowerModalOpen(false)}>
         <ModalContent>
