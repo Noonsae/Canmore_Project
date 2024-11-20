@@ -45,19 +45,21 @@ const PostForm = () => {
 
       // 이미지 파일 업로드
       if (image) {
-        const fileName = `${userId}-${Date.now()}-${image.name}`;
-        const { error: storageError } = await supabase.storage
+        console.log(image);
+        const fileName = `post/_${Date.now()}_${image.name}`;
+        const { data: uploadData ,error: storageError } = await supabase.storage
+
           .from("images")
           .upload(fileName, image);
-
+        console.log(uploadData);
         if (storageError) throw storageError;
 
-        const { publicURL, error: publicURLError } = supabase.storage
+        const { data: publicURL , error: publicURLError } = supabase.storage
           .from("images")
           .getPublicUrl(fileName);
 
         if (publicURLError) throw publicURLError;
-
+        console.log(publicURL);
         imageUrl = publicURL;
       }
       console.log({userId})

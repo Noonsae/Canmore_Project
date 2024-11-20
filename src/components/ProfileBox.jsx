@@ -187,11 +187,10 @@ function ProfileBox() {
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [isBioModalOpen, setIsBioModalOpen] = useState(false);
   const [isFollowerModalOpen, setIsFollowerModalOpen] = useState(false);
-  const [file,setFile]=useState(null);
+  const [file,setFile]=useState();
   const [profileImage, setProfileImage] = useState('https://via.placeholder.com/300');
   const [bio, setBio] = useState('안녕하세요! 자기소개를 입력하세요.');
-  // const [photoDelete,setPhotoDelete]=(null)
-  // const [photoChange,setphotoChange]=(null)
+
   const followers = [{ id: 1, name: '유저_01', image: 'https://via.placeholder.com/80', joinedAt: '2023-11-03' }].sort(
     (a, b) => new Date(b.joinedAt) - new Date(a.joinedAt)
   ); // 최근 가입 순으로 정렬
@@ -200,7 +199,6 @@ function ProfileBox() {
     navigate(`/user/${id}`);
     setIsFollowerModalOpen(false);
   };
-
   useEffect(() => {
     //연동
     const fetchProfile = async () => {
@@ -230,27 +228,26 @@ function ProfileBox() {
     const { error: updateError } = await supabase
       .from('users')
       .update({
-        profile: `https://mvkaxrrdnpmnqqqzkcmi.supabase.co/storage/v1/object/public/images/profile/${data.path}`
+        profile: `https://mvkaxrrdnpmnqqqzkcmi.supabase.co/storage/v1/object/public/images/${data.path}`
       })
       .eq('id', userId);
+      if (updateError) {
+      console.error('오류:', error);
+      return;
+      }
+      setProfileImage(`https://mvkaxrrdnpmnqqqzkcmi.supabase.co/storage/v1/object/public/images/${data.path}`)
+  }; 
+
+  const handleDeleteClick = async (userId) => {
+    const { error } = await supabase.from('users').update({profile:null}).eq('id', userId);
+    if (error) {
+      return alert(error.message);
+    }
+    setProfileImage('https://via.placeholder.com/300');
   };
 
-//   const handeleChagePhoto= async () => {
-// const { data, error } = await supabase
-//   .from('users')
-//   .update({ 컬럼이름: 'otherValue' }) // 수정할 데이터
-//   .eq('some_column', 'someValue') // 특정할 데이터
-//   .select() // 수정 후 조회
-//   }
 
-//   const handeleDeletePhoto= async () => {
-//   const { error } = await supabase
-//     .from('users')
-//     .delete() // 삭제
-//     .eq('some_column', 'someValue'); // 특정할 데이터
-//   }
-  //자기소개 업데이트
-
+  // 자기소개 업데이트
   const handleSaveBio = async () => {
     const { error } = await supabase.from('users').update({ introduce: bio }).eq('id', userId);
     if (error) {
@@ -267,12 +264,14 @@ function ProfileBox() {
       <PhotoContainer>
         <ProfileImage src={profileImage} alt="프로필 사진" />
         <EditPhotoButton onClick={() => setIsPhotoModalOpen(true)}>수정</EditPhotoButton>
+        <DeletePhotoButton onClick={()=>handleDeleteClick(userId)}>삭제</DeletePhotoButton>
+  
         {/* //삭제버튼 생성해야함 */}
       </PhotoContainer>
       <Modal isOpen={isPhotoModalOpen} onRequestClose={() => setIsPhotoModalOpen(false)}>
         <ModalContent>
           <h2>사진 수정</h2>
-          <input id="profile-image-input" type="file" value={file} onChange={(e) => setFile(e.target.files[0])} />
+          <input id="profile-image-input" type="file"  onChange={(e) => setFile(e.target.files[0])} />
           <SaveButton onClick={handleSavePhoto}>저장</SaveButton>
           <CancelButton onClick={() => setIsPhotoModalOpen(false)}>취소</CancelButton>
         </ModalContent>
