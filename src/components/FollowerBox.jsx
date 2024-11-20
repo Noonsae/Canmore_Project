@@ -1,9 +1,8 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
-
-Modal.setAppElement('#root');
+import supabase from '../supabase/supabase';
 
 // 스타일 정의
 const FollowerContainer = styled.div`
@@ -93,22 +92,25 @@ const FollowerItem = styled.div`
   }
 `;
 
-// 컴포넌트 정의
 function FollowerBox() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 추가
+  const [searchTerm, setSearchTerm] = useState('');
+  const [followers, setFollowers] = useState([]);
   const navigate = useNavigate();
 
-  const followers = [
-    { id: 1, name: '유저_01', image: 'https://via.placeholder.com/80', joinedAt: '2023-11-03' },
-    { id: 2, name: '유저_02', image: 'https://via.placeholder.com/80', joinedAt: '2023-11-02' },
-    { id: 3, name: '유저_03', image: 'https://via.placeholder.com/80', joinedAt: '2023-11-01' },
-    { id: 4, name: '유저_04', image: 'https://via.placeholder.com/80', joinedAt: '2023-10-31' },
-    { id: 5, name: '유저_05', image: 'https://via.placeholder.com/80', joinedAt: '2023-10-30' },
-    { id: 6, name: '유저_06', image: 'https://via.placeholder.com/80', joinedAt: '2023-10-29' },
-    { id: 7, name: '유저_07', image: 'https://via.placeholder.com/80', joinedAt: '2023-10-28' },
-    { id: 8, name: '유저_08', image: 'https://via.placeholder.com/80', joinedAt: '2023-10-27' }
-  ].sort((a, b) => new Date(b.joinedAt) - new Date(a.joinedAt));
+  const fetchFollowers = async () => {
+    const { data, error } = await supabase.from('users').select('*').order('create_at', { ascending: false });
+
+    if (error) {
+      console.error('유저 데이터를 가져오는 중 오류 발생:', error);
+    } else {
+      setFollowers(data);
+    }
+  };
+
+  useEffect(() => {
+    fetchFollowers();
+  }, []);
 
   const handleFollowerClick = (id) => {
     navigate(`/user/${id}`);
@@ -116,25 +118,22 @@ function FollowerBox() {
   };
 
   const filteredFollowers = followers.filter((follower) =>
-    follower.name.toLowerCase().includes(searchTerm.toLowerCase())
-  ); // 검색어로 필터링
+    follower.nickname?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <FollowerContainer>
-      {/* 팔로워 그리드 - 상위 6명 */}
       <FollowerGrid>
         {followers.slice(0, 6).map((follower) => (
           <FollowerCard key={follower.id} onClick={() => handleFollowerClick(follower.id)}>
-            <FollowerImage src={follower.image} alt={follower.name} />
-            <FollowerName>{follower.name}</FollowerName>
+            <FollowerImage src={follower.profile || 'https://via.placeholder.com/80'} alt={follower.nickname} />
+            <FollowerName>{follower.nickname}</FollowerName>
           </FollowerCard>
         ))}
       </FollowerGrid>
 
-      {/* '팔로워 목록 보기' 버튼 */}
       <ViewMoreButton onClick={() => setIsModalOpen(true)}>팔로워 목록 보기</ViewMoreButton>
 
-      {/* 팔로워 목록 모달 */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
@@ -148,7 +147,6 @@ function FollowerBox() {
       >
         <ModalContent>
           <h2>팔로워 목록</h2>
-          {/* 검색 바 */}
           <SearchBar
             type="text"
             placeholder="유저 이름 검색"
@@ -158,7 +156,7 @@ function FollowerBox() {
           <FollowerList>
             {filteredFollowers.map((follower) => (
               <FollowerItem key={follower.id} onClick={() => handleFollowerClick(follower.id)}>
-                {follower.name} (가입일: {follower.joinedAt})
+                {follower.nickname} (가입일: {new Date(follower.create_at).toLocaleDateString()})
               </FollowerItem>
             ))}
           </FollowerList>
