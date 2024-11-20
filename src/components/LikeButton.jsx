@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import supabase from '../supabase/Supabase';
 
+<<<<<<< HEAD
 // Supabase 클라이언트 설정
 
 function LikeButton({ toggleLike, postId }) {
@@ -29,6 +30,11 @@ function LikeButton({ toggleLike, postId }) {
 
   const addLike = async () => {
     await supabase.from('likes').upsert({ post_id: postId, user_id: userId, count: (likes[userId] || 0) + 1 });
+=======
+function LikeButton({toggleLike,postId}) {
+  const [likes, setLikes] = useState({}); // 사용자 ID를 키로 하는 객체로 초기화.
+  const userId = 'd860bab7-4d63-4aa9-aa75-d6b100d03c37'; // 예시로 user3 을 썼음. 실제로는 로그인한 사용자의 ID를 사용해야함.
+>>>>>>> 7b3f8e61ea371e43fa2ac3ffd96f037fbd183431
 
     setLikes((prevLikes) => ({
       ...prevLikes,
