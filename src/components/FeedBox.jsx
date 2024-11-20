@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 const FeedContainer = styled.div`
@@ -15,7 +15,7 @@ const FeedHeader = styled.h3`
 
 const FeedImage = styled.img`
   width: 100%;
-  height: 150px;
+  height: auto;
   object-fit: cover;
   border: 1px solid #ddd;
   margin-bottom: 1rem;
@@ -44,17 +44,33 @@ const Button = styled.button`
   }
 `;
 
-function FeedBox({ feed }) {
+function FeedBox({ feed, onCommentClick, onToggleLike }) {
+  const [showFullContent, setShowFullContent] = useState(false); // 추가: 더보기 기능 상태 관리
+
+  const truncatedContent =
+    feed.content.length > 100 && !showFullContent
+      ? `${feed.content.slice(0, 100)}...`
+      : feed.content;
+
   return (
     <FeedContainer>
-      <FeedHeader>{feed.name}</FeedHeader>
-      <FeedImage src={feed.image} alt={feed.name} />
+      <FeedHeader>{feed.userName}</FeedHeader>
+      {feed.image_url && <FeedImage src={feed.image_url} alt="피드 이미지" />}
+      <p>{truncatedContent}</p>
+      {!showFullContent && feed.content.length > 100 && (
+        <Button onClick={() => setShowFullContent(true)}>더보기</Button>
+      )}
       <FeedFooter>
         <LeftActions>
-          <Button>좋아요 ({feed.likes})</Button>
-          <Button>댓글 달기 ({feed.comments})</Button>
+          {/* 좋아요 버튼 */}
+          <Button onClick={() => onToggleLike(feed.id, "user1")}> {/* 수정: toggleLike와 userId 전달 */}
+            좋아요 ({feed.likes.length})
+          </Button>
+          {/* 댓글 달기 버튼 */}
+          <Button onClick={onCommentClick}>
+            댓글 달기 ({feed.comments.length})
+          </Button>
         </LeftActions>
-        <Button>...더보기</Button>
       </FeedFooter>
     </FeedContainer>
   );

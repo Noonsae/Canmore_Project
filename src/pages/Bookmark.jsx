@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import supabase from '../supabase/Supabase';
 import LikeButton from '../components/LikeButton'; // LikeButton 가져오기
 
