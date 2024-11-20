@@ -64,7 +64,7 @@ const ActionButton = styled.button`
   }
 `;
 
-function FeedBox({ feed, onCommentClick, onToggleLike, onUpdate, onDelete }) {
+function FeedBox({ feed, onCommentClick, onToggleLike, onUpdate, onDelete, userId }) {
   const [showFullContent, setShowFullContent] = useState(false); // 더보기 상태 관리
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 상태
   const [editedContent, setEditedContent] = useState(feed.content); // 수정된 내용
@@ -73,6 +73,18 @@ function FeedBox({ feed, onCommentClick, onToggleLike, onUpdate, onDelete }) {
     feed.content.length > 100 && !showFullContent && !isEditing
       ? `${feed.content.slice(0, 100)}...`
       : editedContent;
+
+      const handleSave = () => {
+        if (!feed.user_id || feed.user_id !== userId) { // feed.user_id가 없는 경우 예외 처리
+          alert("작성자만 수정할 수 있습니다.");
+          setIsEditing(false); // 수정 모드 해제
+          setEditedContent(feed.content); // 수정된 내용을 원래 내용으로 되돌림
+          return;
+        }
+
+        onUpdate(feed.id, editedContent);
+        setIsEditing(false); // 수정 모드 해제
+      };
 
   return (
     <FeedContainer>
@@ -92,11 +104,11 @@ function FeedBox({ feed, onCommentClick, onToggleLike, onUpdate, onDelete }) {
       <FeedFooter>
         {/* 좋아요/댓글 버튼: 왼쪽 정렬 */}
         <LeftActions>
-          <button onClick={() => onToggleLike(feed.id, "user1")}>
-            좋아요 ({feed.likes.length})
+          <button onClick={() => onToggleLike(feed.id, userId)}>
+            좋아요 ({feed.likes})
           </button>
           <button onClick={onCommentClick}>
-            댓글 달기 ({feed.comments.length})
+            댓글 달기 ({feed.comments})
           </button>
         </LeftActions>
 
@@ -104,14 +116,7 @@ function FeedBox({ feed, onCommentClick, onToggleLike, onUpdate, onDelete }) {
         <RightActions>
           {isEditing ? (
             <>
-              <ActionButton
-                onClick={() => {
-                  onUpdate(feed.id, editedContent);
-                  setIsEditing(false);
-                }}
-              >
-                저장
-              </ActionButton>
+              <ActionButton onClick={handleSave}>저장</ActionButton>
               <ActionButton onClick={() => setIsEditing(false)}>취소</ActionButton>
             </>
           ) : (
