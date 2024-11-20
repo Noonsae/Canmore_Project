@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Modal from 'react-modal';
-import supabase from '../supabase/Supabase';
+import supabase from '../supabase/supabase';
 
 Modal.setAppElement('#root');
 
@@ -80,46 +80,46 @@ const EditBioButton = styled.button`
   }
 `;
 
-const FollowerContainer = styled.div`
-  background: #fff;
-  padding: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-`;
+// const FollowerContainer = styled.div`
+//   background: #fff;
+//   padding: 1rem;
+//   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+// `;
 
-const FollowerGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
-`;
+// const FollowerGrid = styled.div`
+//   display: grid;
+//   grid-template-columns: repeat(3, 1fr);
+//   gap: 0.5rem;
+// `;
 
-const FollowerCard = styled.div`
-  text-align: center;
-`;
+// const FollowerCard = styled.div`
+//   text-align: center;
+// `;
 
-const FollowerImage = styled.img`
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  margin-bottom: 0.5rem;
-`;
+// const FollowerImage = styled.img`
+//   width: 80px;
+//   height: 80px;
+//   border-radius: 50%;
+//   margin-bottom: 0.5rem;
+// `;
 
-const FollowerName = styled.p`
-  font-size: 0.9rem;
-  color: #4b4f56;
-`;
+// const FollowerName = styled.p`
+//   font-size: 0.9rem;
+//   color: #4b4f56;
+// `;
 
-const ViewMoreButton = styled.button`
-  margin-top: 1rem;
-  background-color: #4267b2;
-  color: white;
-  border: none;
-  padding: 0.5rem;
-  cursor: pointer;
+// const ViewMoreButton = styled.button`
+//   margin-top: 1rem;
+//   background-color: #4267b2;
+//   color: white;
+//   border: none;
+//   padding: 0.5rem;
+//   cursor: pointer;
 
-  &:hover {
-    background: #365899;
-  }
-`;
+//   &:hover {
+//     background: #365899;
+//   }
+// `;
 
 const ModalContent = styled.div`
   padding: 2rem;

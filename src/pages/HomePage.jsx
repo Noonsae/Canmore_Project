@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
-import supabase from '../supabase/supabase';
+import { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
+import supabase from '../supabase/supabase'; // Supabase 클라이언트 가져오기
 import ProfileBox from '../components/ProfileBox';
 import FollowerBox from '../components/FollowerBox';
 import FeedBox from '../components/FeedBox';
 import CommentModal from '../components/CommentModal';
 import { PageContainer, LeftSection, RightSection } from '../styles/StHome';
+import {UserContext} from '../context/userContext'
 
 const HallOfFameBox = styled.div`
   background-color: #fff5d5;
@@ -39,45 +40,48 @@ const HallOfFameText = styled.span`
 `;
 
 function HomePage() {
-  const [feeds, setFeeds] = useState([]);
-  const [hallOfFame, setHallOfFame] = useState([]);
+  
+  const [feeds, setFeeds] = useState([]); // Supabase에서 가져온 데이터를 저장할 상태
   const [userId, setUserId] = useState(null); // 현재 로그인된 사용자 ID
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedFeed, setSelectedFeed] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+
+  // Supabase에서 데이터 가져오기
   useEffect(() => {
     const fetchFeeds = async () => {
-      try {
-        const { data: posts, error: postsError } = await supabase
-          .from('posts')
-          .select('id, content, image_url, hashtag, user_id, users!inner(nickname)');
+      const { data, error } = await supabase.from('posts').select('*'); // 'posts' 테이블에서 모든 데이터 가져오기
+      if (error) {
+        console.error('Error fetching posts:', error);
+      } else {
+        setFeeds(data); // 가져온 데이터를 상태에 저장
+      }
+    };
 
-        if (postsError) throw postsError;
-
-        const { data: likes, error: likesError } = await supabase.from('likes').select('post_id');
-
-        if (likesError) throw likesError;
-
-        const postsWithLikes = posts.map((post) => {
-          const likeCount = likes.filter((like) => like.post_id === post.id).length;
-          return { ...post, like_count: likeCount };
-        });
-
-        const sortedHallOfFame = [...postsWithLikes].sort((a, b) => b.like_count - a.like_count).slice(0, 3);
-
-        setFeeds(postsWithLikes);
-        setHallOfFame(sortedHallOfFame);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+    const fetchUserId = async () => {
+      const { data, error } = await supabase.auth.getUser(); // 로그인된 사용자 정보 가져오기
+      if (error) {
+        console.error('Error fetching user:', error);
+      } else {
+        setUserId(data.user.id || null); // 사용자 ID 설정
       }
     };
 
     fetchFeeds();
-  }, []);
+    fetchUserId();
+  }, []); // 컴포넌트가 처음 렌더링될 때 한 번 실행
 
-  const filteredFeeds = selectedUser ? feeds.filter((feed) => feed.user_id === selectedUser) : feeds;
+  // 명예의 전당 데이터: 좋아요 수로 정렬
+  const hallOfFame = feeds
+    .filter((feed) => feed.likes && Array.isArray(feed.likes)) // likes 배열 확인
+    .sort((a, b) => b.likes.length - a.likes.length)
+    .slice(0, 3);
 
+  // 명예의 전당에서 선택된 사용자의 뉴스피드 필터링
+  const filteredFeeds = selectedUser ? feeds.filter((feed) => feed.userName === selectedUser) : feeds;
+
+  // 댓글 버튼 클릭 핸들러
   const handleCommentClick = (feed) => {
     setSelectedFeed(feed);
     setIsModalOpen(true);
@@ -128,12 +132,18 @@ function HomePage() {
         <HallOfFameBox>
           <HallOfFameTitle>명예의 전당</HallOfFameTitle>
           {hallOfFame.map((feed) => (
+<<<<<<< HEAD
             <HallOfFameItem key={feed.id} onClick={() => setSelectedUser(feed.user_id)}>
               <HallOfFameText>{feed.users.nickname}</HallOfFameText>
               <span>❤️ {feed.like_count || 0}</span>
               {/* <HallOfFameItem key={feed.id} onClick={() => setSelectedUser(feed.userName)}>
               <HallOfFameText>{feed.userName}</HallOfFameText>
               <span>❤️ {feed.likes.length}</span> */}
+=======
+            <HallOfFameItem key={feed.id} onClick={() => setSelectedUser(feed.userName)}>
+              <HallOfFameText>{feed.userName}</HallOfFameText>
+              <span>❤️ {feed.likes.length}</span>
+>>>>>>> 3bd205412bdfb7065b28d740b3abe37fc3e4f2ce
             </HallOfFameItem>
           ))}
         </HallOfFameBox>

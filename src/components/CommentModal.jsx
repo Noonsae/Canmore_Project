@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useFeed } from '../context/FeedContext';
 import styled from 'styled-components';
-import supabase from '../supabase/Supabase';
+import supabase from '../supabase/supabase';
+import { UserContext } from '../context/userContext';
 
 const CommentModal = ({ isOpen, onClose, feedId }) => {
   const { feeds, addComment, deleteComment } = useFeed();
   const [currentFeed, setCurrentFeed] = useState(null);
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState([]);
+  const { user_id } = useContext(UserContext);
 
   useEffect(() => {
     const feed = feeds.find((feed) => feed.id === feedId);
@@ -41,7 +43,7 @@ const CommentModal = ({ isOpen, onClose, feedId }) => {
 
     const { data, error } = await supabase.from('comments').insert([
       {
-        userName: '로그인한 사용자', // 실제 로그인 사용자 이름으로 대체
+        userName: user_id, // 실제 로그인 사용자 이름으로 대체
         content: newComment,
         createdAt: new Date().toISOString(),
         feedId: feedId
@@ -109,6 +111,7 @@ const CommentModal = ({ isOpen, onClose, feedId }) => {
 };
 
 export default CommentModal;
+
 // 스타일 정의
 const Overlay = styled.div`
   position: fixed;
