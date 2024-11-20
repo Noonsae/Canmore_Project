@@ -21,12 +21,10 @@ export const FeedProvider = ({ children }) => {
     );
   };
 
-  const updatePost = (feedId, updatedData) => {
+  const updatePost = (feedId, updatedContent) => {
     setFeeds((prevFeeds) =>
       prevFeeds.map((feed) =>
-        feed.id === feedId
-          ? { ...feed, ...updatedData }
-          : feed
+        feed.id === feedId ? { ...feed, content: updatedContent } : feed
       )
     );
   };

@@ -1,18 +1,38 @@
 import { useState, useEffect } from 'react';
 import { useFeed } from '../context/FeedContext';
 import styled from 'styled-components';
+import supabase from '../supabase/supabase';
+import { UserContext } from '../context/userContext';
 
 const CommentModal = ({ isOpen, onClose, feedId }) => {
   const { feeds, addComment, deleteComment } = useFeed();
-  const [currentFeed, setCurrentFeed] = useState(null); // 현재 선택된 피드
-  const [newComment, setNewComment] = useState(''); // 새 댓글 내용
+  const [currentFeed, setCurrentFeed] = useState(null);
+  const [newComment, setNewComment] = useState('');
+  const [comments, setComments] = useState([]);
+  const { user_id } = useContext(UserContext);
 
   useEffect(() => {
     const feed = feeds.find((feed) => feed.id === feedId);
     setCurrentFeed(feed || null);
   }, [feedId, feeds]);
 
-  const handleSaveComment = () => {
+  useEffect(() => {
+    const fetchComments = async () => {
+      const { data, error } = await supabase.from('comments').select('*').eq('feedId', feedId);
+
+      if (error) {
+        console.error('댓글을 가져오는 중 오류 발생:', error);
+      } else {
+        setComments(data);
+      }
+    };
+
+    if (feedId) {
+      fetchComments();
+    }
+  }, [feedId]);
+
+  const handleSaveComment = async () => {
     if (!newComment.trim()) {
       alert('댓글을 작성하세요!');
       return;
@@ -21,21 +41,32 @@ const CommentModal = ({ isOpen, onClose, feedId }) => {
     const confirmSave = window.confirm('댓글을 저장하시겠습니까?');
     if (!confirmSave) return;
 
-    const newCommentData = {
-      // 이 부분은 슈퍼베이스로 대체 될듯
-      id: Date.now(),
-      userName: '로그인한 사용자', // 실제 로그인 사용자 이름으로 대체
-      content: newComment,
-      createdAt: new Date().toLocaleString()
-    };
+    const { data, error } = await supabase.from('comments').insert([
+      {
+        userName: user_id, // 실제 로그인 사용자 이름으로 대체
+        content: newComment,
+        createdAt: new Date().toISOString(),
+        feedId: feedId
+      }
+    ]);
 
-    addComment(feedId, newCommentData); // FeedContext에서 댓글 추가
-    setNewComment(''); // 입력 초기화
+    if (error) {
+      console.error('댓글 저장 중 오류 발생:', error);
+    } else {
+      setComments([...comments, ...data]);
+      setNewComment('');
+    }
   };
 
-  const handleDeleteComment = (commentId) => {
+  const handleDeleteComment = async (commentId) => {
     if (window.confirm('이 댓글을 삭제하시겠습니까?')) {
-      deleteComment(feedId, commentId); // FeedContext에서 댓글 삭제
+      const { error } = await supabase.from('comments').delete().eq('id', commentId);
+
+      if (error) {
+        console.error('댓글 삭제 중 오류 발생:', error);
+      } else {
+        setComments(comments.filter((comment) => comment.id !== commentId));
+      }
     }
   };
 
@@ -52,12 +83,12 @@ const CommentModal = ({ isOpen, onClose, feedId }) => {
           <p>{currentFeed.content}</p>
           <h4>댓글</h4>
           <CommentList>
-            {currentFeed.comments && currentFeed.comments.length > 0 ? (
-              currentFeed.comments.map((comment) => (
+            {comments && comments.length > 0 ? (
+              comments.map((comment) => (
                 <CommentItem key={comment.id}>
                   <strong>{comment.userName}</strong>
                   <p>{comment.content}</p>
-                  <small>작성 시간: {comment.createdAt}</small>
+                  <small>작성 시간: {new Date(comment.createdAt).toLocaleString()}</small>
                   <button onClick={() => handleDeleteComment(comment.id)}>삭제</button>
                 </CommentItem>
               ))

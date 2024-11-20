@@ -6,8 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 //  supabase 연동
 import supabase from '../supabase/supabase';
+import {UserContext} from '../context/userContext'
 
 const LoginPage = () => {
+  const {setUser_id} = useContext(UserContext)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -20,11 +22,13 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setMessage('');
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       setMessage(`이메일 또는 비밀번호가 올바르지 않습니다.`);
-    } else {
-      navigate('/home');
+    } else { 
+    setUser_id(data.user.id)
+      navigate('/HomePage');
+      
     }
   };
 
