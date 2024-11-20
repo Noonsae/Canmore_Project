@@ -1,6 +1,6 @@
 import { useState } from 'react';
 // Supabase 클라이언트 임포트
-import supabase from '../supabase/supabase';
+import supabase from '../supabase/Supabase';
 // 페이지 이동을 위한 useNavigate Hook 임포트
 import { useNavigate } from 'react-router-dom';
 // 스타일 컴포넌트 라이브러리 임포트

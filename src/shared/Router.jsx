@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from '../pages/LoginPage';
 import SignUpPage from '../pages/SignUpPage';
-import Homepage from '../pages/Homepage';
+import HomePage from '../pages/HomePage';
 import TimeLine from '../pages/TimeLine';
 import FeedPage from '../pages/FeedPage';
 import Layout from '../components/Layout';
@@ -16,10 +16,10 @@ const Router = () => (
       <Route path="/FeedPage" element={<FeedPage />} />
       <Route path="/user/:id" element={<FeedPage />} />
       <Route
-        path="/home"
+        path="/HomePage"
         element={
           <Layout>
-            <Homepage />
+            <HomePage/>
           </Layout>
         }
       />
@@ -30,5 +30,6 @@ const Router = () => (
     </Routes>
   </BrowserRouter>
 );
+
 
 export default Router;

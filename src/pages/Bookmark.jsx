@@ -1,24 +1,43 @@
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
 import supabase from '../supabase/supabase';
 import LikeButton from '../CommonCompontes/LikeButton';
+=======
+import  { useState, useEffect } from 'react';
+import supabase from '../supabase/Supabase';
+import LikeButton from '../components/LikeButton';
+import { UserContext } from '../context/userContext'; // LikeButton 가져오기
+>>>>>>> 2aad5851be525847390e008b4899c4c47d3d7710
 
 const Bookmark = () => {
+  const { user_id } = useContext(UserContext);
   const [likedImages, setLikedImages] = useState([]); // 좋아요한 게시물 데이터
-  const userId = '02e932e7-8772-4362-930e-19dac8805d20'; // 사용자 ID
 
   // 좋아요한 게시물 가져오기
   useEffect(() => {
+    if(!user_id)
+      return
+
     const fetchLikedPosts = async () => {
       try {
+<<<<<<< HEAD
         const { data: likesData, error } = await supabase.from('likes').select('post_id').eq('user_id', userId);
+=======
+        // 좋아요한 post_id 가져오기
+        const { data: likesData, error: likesError } = await supabase
+          .from('likes')
+          .select('post_id')
+          .eq('user_id', user_id.id);
+>>>>>>> 2aad5851be525847390e008b4899c4c47d3d7710
 
-        if (error) {
-          console.error('Error:', error.message);
+        if (likesError) {
+          console.error('Error fetching likes:', likesError.message);
           return;
         }
 
         const likedPostIds = likesData.map((like) => like.post_id);
 
+        // 좋아요한 게시물의 이미지 가져오기
         const { data: postsData, error: postsError } = await supabase
           .from('posts')
           .select('id, image_url')
@@ -38,6 +57,7 @@ const Bookmark = () => {
     fetchLikedPosts();
   }, []);
 
+<<<<<<< HEAD
   // 좋아요 상태 변경 핸들러
   const handleLikeChange = (postId, isLiked) => {
     if (isLiked) {
@@ -46,6 +66,54 @@ const Bookmark = () => {
     } else {
       // 좋아요 해제된 경우
       setLikedImages((prev) => prev.filter((post) => post.id !== postId));
+=======
+  // 좋아요 토글 함수
+  const toggleLike = async (postId) => {
+    const isLiked = likedImages.some((post) => post.id === postId);
+
+    try {
+      if (isLiked) {
+        // 좋아요 해제
+        const { error } = await supabase
+          .from('likes')
+          .delete()
+          .eq('user_id', user_id.id)
+          .eq('post_id', postId);
+
+        if (error) {
+          console.error('Error:', error.message);
+          return;
+        }
+
+        setLikedImages((prev) => prev.filter((post) => post.id !== postId));
+      } else {
+        // 좋아요 추가
+        const { error } = await supabase.from('likes').insert({
+          user_id: user_id.id,
+          post_id: postId,
+        });
+
+        if (error) {
+          console.error('Error:', error.message);
+          return;
+        }
+
+        // 새로 추가된 좋아요한 게시물 데이터 가져오기
+        const { data: newPostData, error: postError } = await supabase
+          .from('posts')
+          .select('id, image_url')
+          .eq('id', postId);
+
+        if (postError) {
+          console.error('Error:', postError.message);
+          return;
+        }
+
+        setLikedImages((prev) => [...prev, ...newPostData]);
+      }
+    } catch (error) {
+      console.error('Unexpected error while toggling like:', error);
+>>>>>>> 2aad5851be525847390e008b4899c4c47d3d7710
     }
   };
 
@@ -65,8 +133,21 @@ const Bookmark = () => {
               textAlign: 'center'
             }}
           >
+<<<<<<< HEAD
             <img src={post.image_url} alt="Liked Post" style={{ width: '100px', height: '100px' }} />
             <LikeButton postId={post.id} onLikeChange={(isLiked) => handleLikeChange(post.id, isLiked)} />
+=======
+            <img
+              src={post.image_url}
+              alt="Liked Post"
+              style={{ width: '100px', height: '100px' }}
+            />
+            <LikeButton
+              postId={post.id}
+              isLiked={true} // 좋아요 상태 전달
+              toggleLike={toggleLike} // toggleLike 함수 전달
+            />
+>>>>>>> 2aad5851be525847390e008b4899c4c47d3d7710
           </div>
         ))
       )}
