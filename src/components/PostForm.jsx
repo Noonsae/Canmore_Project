@@ -2,28 +2,12 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import supabase from "../supabase/Supabase";
 
-const PostForm = ({userId}) => {
+const PostForm = () => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
-  // const [userId, setUserId] = useState(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     const { data: authData, error } = await supabase.auth.getUser(); // 로그인된 사용자 정보 가져오기
-
-  //     if (error) {
-  //       console.error("Error fetching user:", error);
-  //       alert("로그인된 사용자를 확인할 수 없습니다.");
-  //       return;
-  //     }
-  //     setUserId(authData.user.id || null); 
-  //   };
-
-  //   fetchUser();
-  // }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,7 +46,6 @@ const PostForm = ({userId}) => {
         console.log(publicURL);
         imageUrl = publicURL;
       }
-      console.log({userId})
       // 뉴스피드 데이터 Supabase에 업로드
       const { error } = await supabase.from("posts").insert([
         {
@@ -76,7 +59,7 @@ const PostForm = ({userId}) => {
       if (error) throw error;
 
       alert("뉴스피드가 성공적으로 작성되었습니다!");
-      navigate("/home");
+      navigate("/HomePage");
     } catch (error) {
       console.error("Error uploading post:", error);
       alert("뉴스피드 작성 중 오류가 발생했습니다.");

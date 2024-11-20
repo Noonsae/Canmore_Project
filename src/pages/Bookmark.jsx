@@ -1,20 +1,24 @@
 import  { useState, useEffect } from 'react';
 import supabase from '../supabase/Supabase';
-import LikeButton from '../components/LikeButton'; // LikeButton 가져오기
+import LikeButton from '../components/LikeButton';
+import { UserContext } from '../context/userContext'; // LikeButton 가져오기
 
 const Bookmark = () => {
+  const { user_id } = useContext(UserContext);
   const [likedImages, setLikedImages] = useState([]); // 좋아요한 게시물 데이터
-  const userId = 'd860bab7-4d63-4aa9-aa75-d6b100d03c37'; // 사용자 ID(user3을 써서 구현한거라 나중에 해당 유저값으로 수정해야함)
 
   // 좋아요한 게시물 가져오기
   useEffect(() => {
+    if(!user_id)
+      return
+
     const fetchLikedPosts = async () => {
       try {
         // 좋아요한 post_id 가져오기
         const { data: likesData, error: likesError } = await supabase
           .from('likes')
           .select('post_id')
-          .eq('user_id', userId);
+          .eq('user_id', user_id.id);
 
         if (likesError) {
           console.error('Error fetching likes:', likesError.message);
@@ -53,7 +57,7 @@ const Bookmark = () => {
         const { error } = await supabase
           .from('likes')
           .delete()
-          .eq('user_id', userId)
+          .eq('user_id', user_id.id)
           .eq('post_id', postId);
 
         if (error) {
@@ -65,7 +69,7 @@ const Bookmark = () => {
       } else {
         // 좋아요 추가
         const { error } = await supabase.from('likes').insert({
-          user_id: userId,
+          user_id: user_id.id,
           post_id: postId,
         });
 

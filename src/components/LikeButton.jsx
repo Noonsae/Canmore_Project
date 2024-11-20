@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import supabase from '../supabase/Supabase';
+import { UserContext } from '../context/userContext';
 
 // Supabase 클라이언트 설정
 
 function LikeButton({ toggleLike, postId }) {
+  const { user_id } = useContext(UserContext); // 전역 객체 불러오기
   const [likes, setLikes] = useState({});
   const userId = 'd860bab7-4d63-4aa9-aa75-d6b100d03c37'; // 실제 사용자 ID로 대체해야 함.
 
