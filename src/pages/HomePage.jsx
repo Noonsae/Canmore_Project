@@ -39,7 +39,7 @@ const HallOfFameText = styled.span`
 `;
 
 function Home() {
-  const { feeds, toggleLike } = useFeed(); // 수정: toggleLike 추가
+  const { feeds } = useFeed(); 
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedFeed, setSelectedFeed] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -86,7 +86,6 @@ function Home() {
             key={feed.id}
             feed={feed}
             onCommentClick={() => handleCommentClick(feed)}
-            onToggleLike={toggleLike} // 수정: toggleLike 전달
           />
         ))}
       </RightSection>
