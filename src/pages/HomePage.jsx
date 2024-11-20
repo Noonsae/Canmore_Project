@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
-import supabase from '../supabase/Supabase'; // Supabase 클라이언트 가져오기
+import supabase from '../supabase/supabase'; // Supabase 클라이언트 가져오기
 import ProfileBox from '../components/ProfileBox';
 import FollowerBox from '../components/FollowerBox';
 import FeedBox from '../components/FeedBox';
 import CommentModal from '../components/CommentModal';
 import { PageContainer, LeftSection, RightSection } from '../styles/StHome';
+import { UserContext } from '../context/userContext';
 
 const HallOfFameBox = styled.div`
   background-color: #fff5d5;
@@ -39,6 +40,7 @@ const HallOfFameText = styled.span`
 `;
 
 function HomePage() {
+  const { user_id, setUser_id } = useContext(UserContext);
   const [feeds, setFeeds] = useState([]); // Supabase에서 가져온 데이터를 저장할 상태
   const [userId, setUserId] = useState(null); // 현재 로그인된 사용자 ID
   const [selectedUser, setSelectedUser] = useState(null);
@@ -67,7 +69,7 @@ function HomePage() {
 
     fetchFeeds();
     fetchUserId();
-  }, []); // 컴포넌트가 처음 렌더링될 때 한 번 실행
+  }, [setUser_id]); // 컴포넌트가 처음 렌더링될 때 한 번 실행
 
   // 명예의 전당 데이터: 좋아요 수로 정렬
   const hallOfFame = feeds
@@ -76,7 +78,7 @@ function HomePage() {
     .slice(0, 3);
 
   // 명예의 전당에서 선택된 사용자의 뉴스피드 필터링
-  const filteredFeeds = selectedUser ? feeds.filter((feed) => feed.userName === selectedUser) : feeds;
+  const filteredFeeds = selectedUser ? feeds.filter((feed) => feed.user_id  === selectedUser) : feeds;
 
   // 댓글 버튼 클릭 핸들러
   const handleCommentClick = (feed) => {
@@ -140,7 +142,7 @@ const handleLikeChange = (postId, isLiked) => {
         <HallOfFameBox>
           <HallOfFameTitle>명예의 전당</HallOfFameTitle>
           {hallOfFame.map((feed) => (
-            <HallOfFameItem key={feed.id} onClick={() => setSelectedUser(feed.userName)}>
+            <HallOfFameItem key={feed.id} onClick={() => setSelectedUser(feed.user_id)}>
               <HallOfFameText>{feed.userName}</HallOfFameText>
               <span>❤️ {feed.likes}</span>
             </HallOfFameItem>
