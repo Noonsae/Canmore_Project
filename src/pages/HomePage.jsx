@@ -6,7 +6,8 @@ import FollowerBox from '../components/FollowerBox';
 import FeedBox from '../components/FeedBox';
 import CommentModal from '../components/CommentModal';
 import { PageContainer, LeftSection, RightSection } from '../styles/StHome';
-
+import InfScroll from '../components/InfScroll';
+import ScrollToTopButton from '../components/ScrollToTopButton';
 const HallOfFameBox = styled.div`
   background-color: #fff5d5;
   margin-top: 20px;
@@ -140,38 +141,34 @@ function HomePage() {
         <h2>뉴스피드</h2>
         {filteredFeeds.length > 0 ? (
           filteredFeeds.map((feed) => (
-            
-              <FeedBox
-                key={feed.id}
-                feed={feed}
-                onCommentClick={() => handleCommentClick(feed)}
-                onUpdate={(feedId, content) => {
-                  if (feed.user_id === userId) {
-                    // **현재 로그인한 사용자만 수정 가능**
-                    updatePost(feedId, content);
-                  } else {
-                    alert('작성자만 수정할 수 있습니다.');
-                  }
-                }}
-                onDelete={(feedId) => {
-                  if (feed.user_id === userId) {
-                    // **현재 로그인한 사용자만 삭제 가능**
-                    deletePost(feedId);
-                  } else {
-                    alert('작성자만 삭제할 수 있습니다.');
-                  }
-                }}
-              />
-             
-            
+            <FeedBox
+              key={feed.id}
+              feed={feed}
+              onCommentClick={() => handleCommentClick(feed)}
+              onUpdate={(feedId, content) => {
+                if (feed.user_id === userId) {
+                  // **현재 로그인한 사용자만 수정 가능**
+                  updatePost(feedId, content);
+                } else {
+                  alert('작성자만 수정할 수 있습니다.');
+                }
+              }}
+              onDelete={(feedId) => {
+                if (feed.user_id === userId) {
+                  // **현재 로그인한 사용자만 삭제 가능**
+                  deletePost(feedId);
+                } else {
+                  alert('작성자만 삭제할 수 있습니다.');
+                }
+              }}
+            />
           ))
         ) : (
           <p>뉴스피드가 없습니다.</p>
-          
-          
         )}
+        <InfScroll />
+        <ScrollToTopButton />
       </RightSection>
-      
 
       {isModalOpen && selectedFeed && (
         <CommentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} feedId={selectedFeed.id} />

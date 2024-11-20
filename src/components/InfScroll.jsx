@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import supabase from '../supabase/Supabase';
+import supabase from '../supabase/supabase';
 
 const InfScroll = () => {
   const [feeds, setFeeds] = useState([]);
@@ -15,7 +15,7 @@ const InfScroll = () => {
     const { data, error } = await supabase
       .from('posts') // 'feeds'는 Supabase에서 생성한 테이블 이름입니다.
       .select('*')
-      .range(index, index + 3); // 4개씩 가져오기  게시물 숫자 통일
+      .range(index, index + 1); // 4개씩 가져오기  게시물 숫자 통일
 
     if (error) {
       console.error('Error loading feeds:', error.message);
@@ -33,7 +33,7 @@ const InfScroll = () => {
 
   useEffect(() => {
     if (inView) {
-      setIndex((prev) => prev + 4);
+      setIndex((prev) => prev + 1);
     }
   }, [inView]);
 
