@@ -19,7 +19,7 @@ ${reset}
 
   body {    
     font-family: 'DungGeunMo';
-    color: #111;
+    /* color: #fff; */
     background-image: url('/bg.png'); /* 이미지 경로 */
     background-size: cover; /* 이미지를 화면에 맞게 확대 */
     background-repeat: no-repeat; /* 이미지 반복 방지 */

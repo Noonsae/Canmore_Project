@@ -114,6 +114,7 @@ const Welcome = styled.div`
 const LoginWrap = styled.div`
   width: 540px;
   height: 700px;
+  color: #ccc;
 
   position: absolute;
   left: 50%;
@@ -121,13 +122,14 @@ const LoginWrap = styled.div`
   transform: translate(-50%, -50%);
 
   padding: 40px 0;
-  border: 2px solid #3277af;
+  border: 2px solid #111;
   text-align: center;
 `;
 
 const Logo = styled.h1`
   font-size: 34px;
   margin-bottom: 40px;
+  color: #ccc;
 `;
 
 const LoginForm = styled.form`

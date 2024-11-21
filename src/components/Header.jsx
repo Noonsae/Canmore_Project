@@ -11,7 +11,7 @@ const HeaderContainer = styled.header`
 
 const SiteTitle = styled.h1`
   font-size: 1.5rem;
-  color: #333;
+  color: #ccc;
 `;
 
 const NavMenu = styled.nav`
@@ -30,7 +30,6 @@ const NavItem = styled(Link)`
   }
 `;
 
-
 const HomeImage = styled.img`
   width: 45px; /* 이미지의 가로 크기 */
   height: 60px; /* 이미지의 세로 크기 */
@@ -44,9 +43,15 @@ const Header = () => {
         <NavItem to="/">
           <HomeImage src="/14.gif" alt="홈" />
         </NavItem>
-        <NavItem to="/timeline"><HomeImage src="/28.gif" alt="홈" /></NavItem>
-        <NavItem to="/write"><HomeImage src="/7.gif" alt="홈" /></NavItem>
-        <NavItem to="/"><HomeImage src="/21.png" alt="홈" /></NavItem>
+        <NavItem to="/timeline">
+          <HomeImage src="/28.gif" alt="홈" />
+        </NavItem>
+        <NavItem to="/write">
+          <HomeImage src="/7.gif" alt="홈" />
+        </NavItem>
+        <NavItem to="/">
+          <HomeImage src="/21.png" alt="홈" />
+        </NavItem>
       </NavMenu>
     </HeaderContainer>
   );
