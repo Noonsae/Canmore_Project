@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import supabase from '../supabase/Supabase';
+import supabase from '../supabase/supabase';
 import { UserContext } from '../context/userContext';
 
 function LikeButton({ postId, initialLikeCount, onLikeChange }) {
