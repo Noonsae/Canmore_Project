@@ -1,5 +1,5 @@
 //  useState 임포트
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 //  useNavigate 임포트
 import { useNavigate } from 'react-router-dom';
 //  styled-components 임포트
