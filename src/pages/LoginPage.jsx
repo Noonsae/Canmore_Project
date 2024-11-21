@@ -1,99 +1,18 @@
-import { useState, useContext } from 'react';
+//  useState 임포트
+import { useEffect, useState } from 'react';
+//  useNavigate 임포트
 import { useNavigate } from 'react-router-dom';
+//  styled-components 임포트
 import styled from 'styled-components';
+//  supabase 연동
 import supabase from '../supabase/supabase';
 import {UserContext} from '../context/userContext'
-
-// 스타일 컴포넌트 정의
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f9f9f9;
-`;
-
-const LoginBox = styled.div`
-  width: 400px;
-  padding: 20px 40px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const Title = styled.h1`
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-align: center;
-`;
-
-const Label = styled.label`
-  display: block;
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 5px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-  box-sizing: border-box;
-
-  &:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-`;
-
-const Button = styled.button`
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
-const Message = styled.p`
-  color: red;
-  text-align: center;
-  margin-top: 10px;
-`;
-
-const LinkButton = styled.button`
-  margin-top: 10px;
-  width: 100%;
-  background: none;
-  border: none;
-  color: #007bff;
-  font-size: 14px;
-  text-decoration: underline;
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: none;
-  }
-`;
 
 const LoginPage = () => {
   const {setUser_id} = useContext(UserContext)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const [resetMessage, setResetMessage] = useState('');
   const navigate = useNavigate();
 
   const handleEmailChange = (e) => setEmail(e.target.value);
@@ -113,50 +32,153 @@ const LoginPage = () => {
     }
   };
 
-  // 비밀번호 재설정 요청 함수
-  const handlePasswordReset = async () => {
-    setResetMessage('');
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      // 비밀번호 재설정 페이지로 리디렉션
-      redirectTo: 'http://localhost:5173/reset', 
-    });
-    if (error) {
-      setResetMessage(`비밀번호 재설정 실패: ${error.message}`);
-    } else {
-      setResetMessage('비밀번호 재설정 이메일이 전송되었습니다.');
-    }
+  const array_image = [
+    'slider_00.jpg',
+    'slider_01.jpg',
+    'slider_02.jpg',
+    'slider_03.jpg',
+    'slider_04.jpg',
+    'slider_05.jpg',
+    'slider_06.jpg',
+  ];
+
+  const ImageSlider = () => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % array_image.length);
+      }, 3000);
+      return () => clearInterval(interval);
+    }, []);
+
+    return (
+      <SlideImg>
+        {array_image.map((image, index) => (
+          <img
+            key={index}
+            src={image}
+            alt={`슬라이드 ${index + 1}`}
+            style={{
+              display: index === currentIndex ? 'block' : 'none',
+              width: '100%',
+              height: '100%'
+            }}
+          />
+        ))}
+      </SlideImg>
+    );
   };
 
   return (
-    <Container>
-      <LoginBox>
-        <Title>로그인</Title>
-        <form onSubmit={handleLogin}>
-          <Label>이메일</Label>
-          <Input
-            type="email"
-            placeholder="이메일 입력"
-            value={email}
-            onChange={handleEmailChange}
-            required
-          />
-          <Label>비밀번호</Label>
-          <Input
-            type="password"
-            placeholder="비밀번호 입력"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-          <Button type="submit">로그인</Button>
-        </form>
-        {message && <Message>{message}</Message>}
-        <LinkButton onClick={handlePasswordReset}>비밀번호를 잊으셨나요?</LinkButton>
-        {resetMessage && <Message style={{ color: 'green' }}>{resetMessage}</Message>}
-        <LinkButton onClick={() => navigate('/sign-up')}>회원가입</LinkButton>
-      </LoginBox>
-    </Container>
+    <>
+      <Welcome />
+      <LoginWrap>
+        <Logo>로그인페이지</Logo>
+        <LoginForm onSubmit={handleLogin} noValidate>
+          <LoginFieldset>
+            <LoginLabel>이메일</LoginLabel>
+            <LoginInput type="email" placeholder="이메일 입력" value={email} onChange={handleEmailChange} required />
+          </LoginFieldset>
+          <LoginFieldset>
+            <LoginLabel>비밀번호</LoginLabel>
+            <LoginInput
+              type="password"
+              placeholder="비밀번호 입력"
+              value={password}
+              onChange={handlePasswordChange}
+              required
+            />
+          </LoginFieldset>
+          <LoginBtn type="submit">로그인</LoginBtn>
+          <LoginBtn onClick={() => navigate('/sign-up')}>회원가입</LoginBtn>
+        </LoginForm>
+
+        <ImageSlider />
+      </LoginWrap>
+    </>
   );
 };
 
 export default LoginPage;
+
+const Welcome = styled.div`
+  width: 800px;
+  height: 100px;
+
+  margin: 70px auto;
+
+  background: url(/welcom.gif) no-repeat center / cover;
+`;
+
+const LoginWrap = styled.div`
+  width: 540px;
+  height: 700px;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  padding: 40px 0;
+  border: 2px solid #3277af;
+  text-align: center;
+`;
+
+const Logo = styled.h1`
+  font-size: 34px;
+  margin-bottom: 40px;
+`;
+
+const LoginForm = styled.form`
+  width: 400px;
+  height: 240px;
+  border: 2px solid #333;
+  margin: 0 auto 20px;
+`;
+
+const LoginFieldset = styled.fieldset`
+  display: flex;
+  flex-direction: row;
+  padding: 40px 30px 20px;
+  &:nth-child(2) {
+    padding-top: 10px;
+  }
+`;
+
+const LoginLabel = styled.label`
+  display: block;
+  width: 80px;
+  height: 40px;
+  line-height: 40px;
+  text-align: left;
+`;
+
+const LoginInput = styled.input`
+  display: block;
+  width: 250px;
+  height: 40px;
+  font-size: 16px;
+  line-height: 45px;
+`;
+const LoginBtn = styled.button`
+  display: inline-block;
+  width: 80px;
+  height: 30px;
+  text-align: center;
+  cursor: pointer;
+
+  margin: 10px 20px;
+  font-size: 14px;
+
+  border: 3px solid #ccc;
+  background-color: #ddd;
+  border-right-color: #777;
+  border-bottom-color: #777;
+`;
+const SlideImg = styled.div`
+  width: 100%;
+  height: 320px;
+
+  box-sizing:border-box;  
+`;

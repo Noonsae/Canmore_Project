@@ -5,7 +5,6 @@ import HomePage from '../pages/HomePage';
 import TimeLine from '../pages/TimeLine';
 import FeedPage from '../pages/FeedPage';
 import Layout from '../components/Layout';
-import ResetPasswordPage from '../pages/ResetPasswordPage';
 import UserFeedPage from '../pages/UsersFeedPage';
 
 const Router = () => (
@@ -25,7 +24,7 @@ const Router = () => (
       />
       <Route path="/timeline" element={<TimeLine />} />
       <Route path="/write" element={<FeedPage />} />
-      <Route path="/reset" element={<ResetPasswordPage />} />
+      <Route path="/bookmark" element={<Bookmark />} />
     </Routes>
   </BrowserRouter>
 );
