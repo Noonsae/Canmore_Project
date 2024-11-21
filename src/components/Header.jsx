@@ -38,7 +38,6 @@ const Header = () => {
       <NavMenu>
         <NavItem to="/">홈</NavItem>
         <NavItem to="/timeline">타임라인</NavItem>
-        <NavItem to="/bookmark">즐겨찾기</NavItem>
         <NavItem to="/write">글쓰기</NavItem>
         <NavItem to="/">로그아웃</NavItem>
       </NavMenu>
