@@ -29,7 +29,7 @@ const ScrollToTopButton = () => {
     <>
       {isVisible && (
         <img
-        src="../public/10.gif" // 이미지 경로
+        src="/10.gif" // 이미지 경로
         alt="Scroll to Top"
         onClick={scrollToTop}
         style={styles.image}

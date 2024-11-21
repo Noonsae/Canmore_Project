@@ -14,13 +14,13 @@ ${reset}
   * {
     box-sizing: border-box;
     font-size: 10px;
-    cursor: url('../public/cursor-dino.png'), auto; /* 마우스 커서를 커스텀 이미지로 변경 */
+    cursor: url('/cursor-dino.png'), auto; /* 마우스 커서를 커스텀 이미지로 변경 */
   }
 
   body {    
     font-family: 'DungGeunMo';
     color: #111;
-    background-image: url('../public/bg.png'); /* 이미지 경로 */
+    background-image: url('/bg.png'); /* 이미지 경로 */
     background-size: cover; /* 이미지를 화면에 맞게 확대 */
     background-repeat: no-repeat; /* 이미지 반복 방지 */
     background-position: center center; /* 이미지 가운데 정렬 */
