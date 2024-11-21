@@ -24,7 +24,6 @@ const Router = () => (
       />
       <Route path="/timeline" element={<TimeLine />} />
       <Route path="/write" element={<FeedPage />} />
-      <Route path="/bookmark" element={<Bookmark />} />
     </Routes>
   </BrowserRouter>
 );
