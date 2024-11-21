@@ -6,6 +6,7 @@ import TimeLine from '../pages/TimeLine';
 import FeedPage from '../pages/FeedPage';
 import Layout from '../components/Layout';
 import ResetPasswordPage from '../pages/ResetPasswordPage';
+import UserFeedPage from '../pages/UsersFeedPage';
 
 const Router = () => (
   <BrowserRouter>
@@ -13,12 +14,12 @@ const Router = () => (
       <Route path="/" element={<LoginPage />} />
       <Route path="/sign-up" element={<SignUpPage />} />
       <Route path="/FeedPage" element={<FeedPage />} />
-      <Route path="/user/:id" element={<FeedPage />} />
+      <Route path="/user/:id" element={<UserFeedPage />} />
       <Route
         path="/HomePage"
         element={
           <Layout>
-            <HomePage/>
+            <HomePage />
           </Layout>
         }
       />
@@ -28,6 +29,5 @@ const Router = () => (
     </Routes>
   </BrowserRouter>
 );
-
 
 export default Router;
