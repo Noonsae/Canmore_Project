@@ -53,7 +53,7 @@ function HomePage() {
   // Supabase에서 데이터 가져오기
   useEffect(() => {
     const fetchFeeds = async () => {
-      const { data, error } = await supabase.from('posts').select('*'); // 'posts' 테이블에서 모든 데이터 가져오기
+      const { data, error } = await supabase.from('posts').select('*,users (nickname)'); // 'posts' 테이블에서 모든 데이터 가져오기
       if (error) {
         console.error('Error fetching posts:', error);
       } else {
@@ -76,8 +76,7 @@ function HomePage() {
 
   // 명예의 전당 데이터: 좋아요 수로 정렬
   const hallOfFame = feeds
-    .filter((feed) => feed.likes && Array.isArray(feed.likes)) // likes 배열 확인
-    .sort((a, b) => b.likes.length - a.likes.length)
+    .sort((a, b) => b.likes - a.likes)
     .slice(0, 3);
 
   // 명예의 전당에서 선택된 사용자의 뉴스피드 필터링
@@ -146,7 +145,7 @@ const handleLikeChange = (postId, isLiked) => {
           <HallOfFameTitle>명예의 전당</HallOfFameTitle>
           {hallOfFame.map((feed) => (
             <HallOfFameItem key={feed.id} onClick={() => setSelectedUser(feed.user_id)}>
-              <HallOfFameText>{feed.userName}</HallOfFameText>
+              <HallOfFameText>{feed.users.nickname}의 게시물</HallOfFameText>
               <span>❤️ {feed.likes}</span>
             </HallOfFameItem>
           ))}
