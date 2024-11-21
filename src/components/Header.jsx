@@ -42,11 +42,11 @@ const Header = () => {
       <SiteTitle>사이트명</SiteTitle>
       <NavMenu>
         <NavItem to="/">
-          <HomeImage src="../public/14.gif" alt="홈" />
+          <HomeImage src="/14.gif" alt="홈" />
         </NavItem>
-        <NavItem to="/timeline"><HomeImage src="../public/28.gif" alt="홈" /></NavItem>
-        <NavItem to="/write"><HomeImage src="../public/7.gif" alt="홈" /></NavItem>
-        <NavItem to="/"><HomeImage src="../public/21.png" alt="홈" /></NavItem>
+        <NavItem to="/timeline"><HomeImage src="/28.gif" alt="홈" /></NavItem>
+        <NavItem to="/write"><HomeImage src="/7.gif" alt="홈" /></NavItem>
+        <NavItem to="/"><HomeImage src="/21.png" alt="홈" /></NavItem>
       </NavMenu>
     </HeaderContainer>
   );
