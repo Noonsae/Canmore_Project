@@ -6,6 +6,72 @@ import supabase from '../supabase/supabase';
 
 Modal.setAppElement('#root');
 
+// 공통 버튼 스타일
+const BaseButton = styled.button`
+  border: 3px solid #eee;
+  border-right-color: #aaa;
+  border-bottom-color: #aaa;
+  cursor: pointer;
+`;
+
+const EditPhotoButton = styled(BaseButton)`
+  position: absolute;
+  top: 10px;
+  right: 60px;
+  background-color: #eee;
+  color: #050505;
+
+  &:hover {
+    background-color: #aaa;
+    color: #050505;
+  }
+`;
+
+const DeletePhotoButton = styled(BaseButton)`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #eee;
+  color: #050505;
+
+  &:hover {
+    background-color: #aaa;
+    color: #050505;
+  }
+`;
+
+const EditBioButton = styled(BaseButton)`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #eee;
+  color: #050505;
+
+  &:hover {
+    background-color: #aaa;
+    color: #050505;
+  }
+`;
+
+const SaveButton = styled(BaseButton)`
+  background-color: #28a745;
+  color: white;
+
+  &:hover {
+    background-color: #218838;
+  }
+`;
+
+const CancelButton = styled(BaseButton)`
+  background-color: #dc3545;
+  color: white;
+
+  &:hover {
+    background-color: #c82333;
+  }
+`;
+
+
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -26,33 +92,6 @@ const ProfileImage = styled.img`
   border: 1px solid #ddd;
 `;
 
-const EditPhotoButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 60px;
-  background-color: #4267b2;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  &:hover {
-    background-color: #365899;
-  }
-`;
-const DeletePhotoButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px; /* 삭제 버튼의 위치 */
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  &:hover {
-    background-color: #c82333;
-  }
-`;
-
 const BioContainer = styled.div`
   position: relative;
   background: #fff;
@@ -64,62 +103,6 @@ const BioText = styled.p`
   font-size: 1rem;
   color: #4b4f56;
 `;
-
-const EditBioButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: #4267b2;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #365899;
-  }
-`;
-
-// const FollowerContainer = styled.div`
-//   background: #fff;
-//   padding: 1rem;
-//   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-// `;
-
-// const FollowerGrid = styled.div`
-//   display: grid;
-//   grid-template-columns: repeat(3, 1fr);
-//   gap: 0.5rem;
-// `;
-
-// const FollowerCard = styled.div`
-//   text-align: center;
-// `;
-
-// const FollowerImage = styled.img`
-//   width: 80px;
-//   height: 80px;
-//   border-radius: 50%;
-//   margin-bottom: 0.5rem;
-// `;
-
-// const FollowerName = styled.p`
-//   font-size: 0.9rem;
-//   color: #4b4f56;
-// `;
-
-// const ViewMoreButton = styled.button`
-//   margin-top: 1rem;
-//   background-color: #4267b2;
-//   color: white;
-//   border: none;
-//   padding: 0.5rem;
-//   cursor: pointer;
-
-//   &:hover {
-//     background: #365899;
-//   }
-// `;
 
 const ModalContent = styled.div`
   padding: 2rem;
@@ -146,21 +129,6 @@ const ModalContent = styled.div`
   }
 `;
 
-const SaveButton = styled.button`
-  background-color: #28a745;
-  color: white;
-  &:hover {
-    background-color: #218838;
-  }
-`;
-
-const CancelButton = styled.button`
-  background-color: #dc3545;
-  color: white;
-  &:hover {
-    background-color: #c82333;
-  }
-`;
 
 const FollowerList = styled.div`
   display: flex;

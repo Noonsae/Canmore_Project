@@ -10,9 +10,12 @@ import InfScroll from '../components/InfScroll';
 import ScrollToTopButton from '../components/ScrollToTopButton';
 import { UserContext } from '../context/userContext';
 
-
 const HallOfFameBox = styled.div`
   background-color: #fff5d5;
+  background-image: url('../public/rank.gif'); /* GIF 배경 이미지 경로 */
+  background-size: cover; /* 배경 이미지가 컨테이너 크기에 맞게 조정 */
+  background-repeat: no-repeat; /* 이미지 반복 방지 */
+  background-position: center; /* 이미지 가운데 정렬 */
   margin-top: 20px;
   padding: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -146,7 +149,11 @@ const handleLikeChange = (postId, isLiked) => {
           {hallOfFame.map((feed) => (
             <HallOfFameItem key={feed.id} onClick={() => setSelectedUser(feed.user_id)}>
               <HallOfFameText>{feed.users.nickname}의 게시물</HallOfFameText>
-              <span>❤️ {feed.likes}</span>
+              <img
+        src="../public/5.gif" // 이미지 경로
+        alt="likes"
+        style={{ width: '24px', height: '24px', marginLeft: '8px' }} // 이미지 스타일
+      /><span> {feed.likes}</span>
             </HallOfFameItem>
           ))}
         </HallOfFameBox>

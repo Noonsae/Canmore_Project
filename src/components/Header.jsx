@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const HeaderContainer = styled.header`
-  background-color: #f5f5f5;
   padding: 1rem;
   display: flex;
   justify-content: space-between;
@@ -31,15 +30,23 @@ const NavItem = styled(Link)`
   }
 `;
 
+
+const HomeImage = styled.img`
+  width: 45px; /* 이미지의 가로 크기 */
+  height: 60px; /* 이미지의 세로 크기 */
+`;
+
 const Header = () => {
   return (
     <HeaderContainer>
       <SiteTitle>사이트명</SiteTitle>
       <NavMenu>
-        <NavItem to="/">홈</NavItem>
-        <NavItem to="/timeline">타임라인</NavItem>
-        <NavItem to="/write">글쓰기</NavItem>
-        <NavItem to="/">로그아웃</NavItem>
+        <NavItem to="/">
+          <HomeImage src="../public/14.gif" alt="홈" />
+        </NavItem>
+        <NavItem to="/timeline"><HomeImage src="../public/28.gif" alt="홈" /></NavItem>
+        <NavItem to="/write"><HomeImage src="../public/7.gif" alt="홈" /></NavItem>
+        <NavItem to="/"><HomeImage src="../public/21.png" alt="홈" /></NavItem>
       </NavMenu>
     </HeaderContainer>
   );

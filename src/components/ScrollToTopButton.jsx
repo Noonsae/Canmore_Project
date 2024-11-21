@@ -28,26 +28,26 @@ const ScrollToTopButton = () => {
   return (
     <>
       {isVisible && (
-        <button onClick={scrollToTop} style={styles.button}>
-          ↑
-        </button>
+        <img
+        src="../public/10.gif" // 이미지 경로
+        alt="Scroll to Top"
+        onClick={scrollToTop}
+        style={styles.image}
+      />
       )}
     </>
   );
 };
 // isVisible이 true일 때만 위로 스크롤 버튼이 렌더링. 버튼을 클릭하면 scrollToTop 함수가 호출되어 페이지가 위로 스크롤
 const styles = {
-  button: {
+  image: {
     position: "fixed",
     bottom: "20px",
     right: "20px",
     padding: "10px",
-    fontSize: "18px",
-    backgroundColor: "#007BFF",
-    color: "#FFFFFF",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
+    width: "150px", // 이미지 크기 조정
+    height: "150px", // 이미지 크기 조정
+    cursor: "pointer", // 클릭 가능한 커서
   },
 };
 
